@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-Beam 공사 위험성평가 가이드</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        safety: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            900: '#78350f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700;800&display=swap');
+        body {
+            font-family: 'Pretendard', sans-serif;
+        }
+        .risk-card:hover .risk-overlay {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+    <!-- 상단 헤더 / 히어로 섹션 -->
+    <header class="relative bg-slate-900 text-white overflow-hidden py-16 px-4 sm:px-6 lg:px-8 border-b-4 border-safety-500">
+        <div class="absolute inset-0 opacity-15">
+            <!-- 패턴 백그라운드 효과 -->
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+                <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        </div>
+        
+        <div class="relative max-w-5xl mx-auto text-center">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20 mb-4 animate-pulse">
+                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                초고위험군 공종 특별 가이드
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+                철골<span class="text-safety-500">(H-Beam)</span> 공사 위험성평가
+            </h1>
+            <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-300">
+                고소 작업과 중량물 양중이 수반되는 철골 공사는 중대재해 발생 비율이 매우 높습니다.<br>
+                단계별 핵심 위험 요인을 파악하고 철저한 안전대책을 준수하십시오.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 sm:px-6 lg:px-8 space-y-16">
+
+        <!-- SECTION 1: 핵심 위험 요인 -->
+        <section id="risk-factors">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="p-2 bg-safety-100 text-safety-600 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">1. 주요 위험 요인 (Hazard Factors)</h2>
+                    <p class="text-sm text-slate-500">철골 조립 공정에서 가장 빈번히 발생하는 4대 주요 재해 유형</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 카드 1: 추락 -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden relative group transition duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="p-6">
+                        <div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-lg flex items-center justify-center mb-4 font-bold text-lg">01</div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">추락 (떨어짐)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">H-Beam 고소 이동 또는 볼트 체결 시 안전대 걸이 시설(마스터 로프)의 부재나 안전대 미착용으로 인한 실족 추락.</p>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 text-xs font-semibold text-rose-600 flex justify-between items-center">
+                        <span>발생률: 최고 고위험</span>
+                        <span class="bg-rose-100 px-2 py-0.5 rounded">중대 재해</span>
+                    </div>
+                </div>
+
+                <!-- 카드 2: 낙하·비래 -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden relative group transition duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="p-6">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-lg flex items-center justify-center mb-4 font-bold text-lg">02</div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">낙하·비래 (맞음)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">양중 중인 H-Beam의 와이어가 끊겨 부재 낙하, 또는 상부 작업자가 사용하던 볼트, 너트, 스패너 등 공구 낙하에 의한 맞음 사고.</p>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 text-xs font-semibold text-amber-600 flex justify-between items-center">
+                        <span>발생률: 매우 높음</span>
+                        <span class="bg-amber-100 px-2 py-0.5 rounded">하부 위험</span>
+                    </div>
+                </div>
+
+                <!-- 카드 3: 붕괴·도괴 -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden relative group transition duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="p-6">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-lg flex items-center justify-center mb-4 font-bold text-lg">03</div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">붕괴·도괴 (무너짐)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">철골 기둥을 세운 직후 가조립(가볼트) 상태에서 크레인 와이어를 미리 해제하거나 강풍 발생 시 기둥이 기울어져 쓰러짐.</p>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 text-xs font-semibold text-blue-600 flex justify-between items-center">
+                        <span>발생률: 예측 불허</span>
+                        <span class="bg-blue-100 px-2 py-0.5 rounded">구조물 위험</span>
+                    </div>
+                </div>
+
+                <!-- 카드 4: 협착 -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden relative group transition duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="p-6">
+                        <div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-lg flex items-center justify-center mb-4 font-bold text-lg">04</div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-2">협착 (끼임)</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">H-Beam을 하강하여 기둥이나 보의 접합부에 정밀하게 맞추어 조립하는 단계에서 손과 발이 부재 사이에 끼이는 부상.</p>
+                    </div>
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 text-xs font-semibold text-orange-600 flex justify-between items-center">
+                        <span>발생률: 작업 빈도 높음</span>
+                        <span class="bg-orange-100 px-2 py-0.5 rounded">신체 부상</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 실제 재해 사례 -->
+        <section id="disaster-cases" class="bg-slate-100 rounded-2xl p-6 sm:p-10">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">2. 실제 재해 사례 (Case Studies)</h2>
+                    <p class="text-sm text-slate-500">실제 현장에서 발생한 사고를 통해 배우는 안전 수칙의 가치</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- 사례 1: 추락 -->
+                <div class="bg-white rounded-xl shadow-lg border-l-4 border-red-500 overflow-hidden flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">사례 01 / 추락 사고</span>
+                            <span class="text-xs text-slate-400">사망 1명 발생</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">H-Beam 상부 이동 중 떨어짐</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            공장 신축 현장에서 철골 와셔 및 볼트 체결 작업을 마친 한 숙련 근로자가 다른 작업 지점으로 신속하게 이동하기 위해 약 8m 높이의 H-Beam 상부를 걸어가던 중, 중심을 잃고 발을 헛디뎌 바닥으로 그대로 추락하였습니다.
+                        </p>
+                        
+                        <div class="space-y-3 bg-slate-50 p-4 rounded-lg text-xs">
+                            <div>
+                                <span class="font-bold text-red-600">⚠️ 사고 원인:</span>
+                                <ul class="list-disc pl-4 mt-1 space-y-1 text-slate-600">
+                                    <li>H-Beam 상부에 근로자가 안전대를 걸 수 있는 추락방지용 수평안전대걸이 시설(수평 구명줄) 미설치.</li>
+                                    <li>개인 안전대를 착용하였으나 이동 중 실제로 체결할 연결 고리가 부재함.</li>
+                                    <li>하부에 낙하물이나 추락을 완충할 안전 방망(추락방지망) 미설치.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-red-50/50 border-t border-red-100/40">
+                        <div class="flex items-start gap-2">
+                            <span class="text-emerald-700 font-bold text-xs shrink-0 mt-0.5">[예방대책]</span>
+                            <p class="text-xs text-emerald-800 leading-relaxed">
+                                반드시 주 작업대 상부에 직경 16mm 이상의 섬유 로프 또는 와이어로프를 이용해 수평 구명줄을 설치하고, 쇽업쇼버(안전 블록 등)가 있는 쌍줄 안전대를 항상 구명줄에 걸고 이동하도록 철저히 관리해야 합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사례 2: 도괴 -->
+                <div class="bg-white rounded-xl shadow-lg border-l-4 border-amber-500 overflow-hidden flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start gap-4 mb-4">
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded bg-amber-100 text-amber-800">사례 02 / 도괴 사고</span>
+                            <span class="text-xs text-slate-400">사망 1명 발생</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">기둥 가조립 중 기둥 쓰러짐</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            물류센터 신축 공사 중 크레인을 사용하여 높이 12m의 대형 H-Beam 철골 기둥을 세웠습니다. 기둥 기초와 베이스 플레이트 접합부가 불완전하게 가조립된 상태에서 인양 와이어를 분리하자 기둥이 순식간에 쓰러지면서 하부에서 다음 조립을 대기 중이던 근로자를 덮쳤습니다.
+                        </p>
+                        
+                        <div class="space-y-3 bg-slate-50 p-4 rounded-lg text-xs">
+                            <div>
+                                <span class="font-bold text-amber-700">⚠️ 사고 원인:</span>
+                                <ul class="list-disc pl-4 mt-1 space-y-1 text-slate-600">
+                                    <li>베이스 플레이트의 핵심인 앵커 볼트를 일부 구멍에만 가체결(가체결 개수 미달)한 상태에서 무리하게 인양 로프 해제.</li>
+                                    <li>강풍 등 외력에 저항할 만한 기둥 임시 지지 수단(가이 와이어로프, 버팀대 등)을 일절 설치하지 않음.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-amber-50/50 border-t border-amber-100/40">
+                        <div class="flex items-start gap-2">
+                            <span class="text-emerald-700 font-bold text-xs shrink-0 mt-0.5">[예방대책]</span>
+                            <p class="text-xs text-emerald-800 leading-relaxed">
+                                철골 기둥 건립 후 앵커 볼트를 설계 도서에 명시된 대로 확실히 체결한 이후 와이어로프를 해제해야 합니다. 또한 기둥 지지를 굳히기 전까지는 최소 2방향 이상 가이 와이어나 버팀대를 대어 고정하는 규정을 준수해야 합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 실시간 인터랙티브 체크리스트 -->
+        <section id="safety-checklist" class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <!-- 상단 상태바 & 진행률 (고정/플로팅 느낌의 대시보드) -->
+            <div class="bg-slate-900 text-white p-6 sm:p-8 border-b border-slate-800">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="text-2xl font-bold">3. 철골공사 실무 안전 체크리스트</h2>
+                        <p class="text-xs text-slate-400 mt-1">현장 작업 전, 이행 여부를 반드시 점검해 안전율을 높이십시오.</p>
+                    </div>
+                    <div class="bg-slate-800/80 border border-slate-700 px-4 py-2.5 rounded-xl flex items-center gap-3">
+                        <span class="text-xs text-slate-400">나의 이행도:</span>
+                        <span id="progress-pct" class="text-2xl font-extrabold text-safety-500">0%</span>
+                    </div>
+                </div>
+                
+                <!-- 진행 상태 게이지 바 -->
+                <div class="space-y-2">
+                    <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-gradient-to-r from-safety-500 to-amber-400 h-full w-0 transition-all duration-500 ease-out"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span id="progress-status" class="text-rose-400 font-medium">안전 점검을 시작해 주세요. (가장 아래 체크리스트 클릭)</span>
+                        <span class="text-slate-500">목표: 100% 달성</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 세부 점검 항목 그룹 -->
+            <div class="p-6 sm:p-10 space-y-10">
+                <!-- 그룹 A: 작업 준비 단계 -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
+                        <span class="w-2.5 h-2.5 rounded-full bg-safety-500"></span>
+                        단계 A. 작업 준비 및 기상 검토
+                    </h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="A1">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">철골조립 안전작업계획서 수립 및 수립 확인</span>
+                                <p class="text-xs text-slate-500 mt-0.5">조립 순서, 인양 기계 종류/성능, 신호 체계가 포함된 문서가 현장 소장 서명을 득하였는가?</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="A2">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">기상 조건 상시 모니터링 체계 (강풍 대책)</span>
+                                <p class="text-xs text-slate-500 mt-0.5">풍속이 초속 10m 이상, 혹은 폭우/폭설 기상 예보 시 철골 작업을 즉각 정지하도록 가이드라인이 명시되어 있는가?</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="A3">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">고소 작업자 개인보호구 최종 검수</span>
+                                <p class="text-xs text-slate-500 mt-0.5">작업자가 착용한 안전모의 턱끈이 밀착되어 있고, 안전대에 충격흡수 기능 장치(쇽업쇼버)가 포함된 쌍줄 그립이 양호한가?</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 그룹 B: 인양 및 본 조립 단계 -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        단계 B. 양중(인양) 및 도괴 방지
+                    </h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="B1">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">인양 시 안전한 2줄 걸이 체결 원칙 준수</span>
+                                <p class="text-xs text-slate-500 mt-0.5">H-Beam 부재의 수평 및 균형을 잡기 위해 반드시 중앙 좌우 2개소 이상을 결속하여 양중을 수행하는가?</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="B2">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">부재 하부 작업 제한 및 통제구역 설정</span>
+                                <p class="text-xs text-slate-500 mt-0.5">크레인이 인양 중인 작업 반경 하부의 근로자 출입을 엄격히 통제하고 전담 신호수를 안전한 구역에 배치했는가?</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="B3">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">조립 기둥 도괴 방지용 가설 결속</span>
+                                <p class="text-xs text-slate-500 mt-0.5">기둥 설치 후 베이스 앵커 볼트 완전 체결 및 최소 2방향 이상 가이 와이어 또는 버팀대를 체결하기 전 크레인 훅을 풀지 않는가?</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 그룹 C: 고소 작업 환경 구축 -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                        단계 C. 추락 및 낙하 방지 대책
+                    </h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="C1">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">H-Beam 수평 안전 구명줄 설치 완료</span>
+                                <p class="text-xs text-slate-500 mt-0.5">H-Beam 보 위로 직접 건너가는 근로자의 승강 통로 및 주 이동 구간 전체에 16mm 이상 마스터 로프가 수평으로 긴장 설치되었는가?</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="C2">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">구조물 하부 추락방지망 설치 간격 확인</span>
+                                <p class="text-xs text-slate-500 mt-0.5">고소 작업 위치 하부로 안전 규정에 따라 추락방지 안전 기망이 수평으로 촘촘히 설치되었는지 검수하였는가?</p>
+                            </div>
+                        </label>
+                        <label class="flex items-start gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 cursor-pointer transition">
+                            <input type="checkbox" class="checklist-item mt-1 w-5 h-5 rounded border-slate-300 text-safety-500 focus:ring-safety-500" value="C3">
+                            <div class="text-sm">
+                                <span class="font-semibold text-slate-800">낙하 예방을 위한 공구 주머니 및 볼트 전용 백 지급</span>
+                                <p class="text-xs text-slate-500 mt-0.5">H-Beam 고소 조인터 부품(볼트, 와셔)은 쏟아지지 않는 전용 바스켓/포대에 수납하고, 작업자의 낙하 방지 끈이 달린 공구를 사용 중인가?</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 리셋 버튼 추가 -->
+            <div class="p-6 bg-slate-50 border-t border-slate-100 text-right">
+                <button id="btn-reset" class="px-5 py-2.5 rounded-lg border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 transition text-sm font-semibold text-slate-700">
+                    선택 초기화
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 py-12 mt-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <p class="text-sm">본 문서는 산업안전보건기준에 관한 규칙 제38조 및 위험성평가 지침을 기반으로 작성된 가이드입니다.</p>
+            <p class="text-xs text-slate-600">© 2026 건설 안전 위험성평가 웹 플랫폼 프로젝트. H-Beam 분야 담당자 리포트</p>
+        </div>
+    </footer>
+
+    <!-- 실시간 진행률 연동 자바스크립트 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.checklist-item');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPct = document.getElementById('progress-pct');
+            const progressStatus = document.getElementById('progress-status');
+            const btnReset = document.getElementById('btn-reset');
+
+            function updateProgress() {
+                const total = checkboxes.length;
+                const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const percentage = Math.round((checked / total) * 100);
+
+                // 프로그레스 바 적용
+                progressBar.style.width = `${percentage}%`;
+                progressPct.textContent = `${percentage}%`;
+
+                // 상태 메시지 커스터마이징
+                if (percentage === 0) {
+                    progressStatus.textContent = "안전 점검을 시작해 주세요. (가장 아래 체크리스트 클릭)";
+                    progressStatus.className = "text-rose-400 font-medium";
+                } else if (percentage < 40) {
+                    progressStatus.textContent = `주의: 최소 안전 조치가 미흡합니다 (${checked}/${total} 완료)`;
+                    progressStatus.className = "text-red-400 font-medium";
+                } else if (percentage < 80) {
+                    progressStatus.textContent = `양호: 안전 요건이 대다수 갖춰지고 있습니다 (${checked}/${total} 완료)`;
+                    progressStatus.className = "text-amber-400 font-medium";
+                } else if (percentage < 100) {
+                    progressStatus.textContent = "우수: 완벽한 안전 확보까지 몇 단계 안 남았습니다!";
+                    progressStatus.className = "text-teal-400 font-medium";
+                } else {
+                    progressStatus.textContent = "통과: 모든 안전 지침이 이행되었습니다. 작업을 시작해도 좋습니다!";
+                    progressStatus.className = "text-emerald-400 font-bold";
+                }
+            }
+
+            // 개별 체크박스 이벤트 추가
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', () => {
+                    // 체크 시 시각 효과
+                    const parent = cb.closest('label');
+                    if (cb.checked) {
+                        parent.classList.add('bg-amber-50/60', 'border-amber-300');
+                    } else {
+                        parent.classList.remove('bg-amber-50/60', 'border-amber-300');
+                    }
+                    updateProgress();
+                });
+            });
+
+            // 초기화 버튼 이벤트
+            btnReset.addEventListener('click', () => {
+                checkboxes.forEach(cb => {
+                    cb.checked = false;
+                    const parent = cb.closest('label');
+                    parent.classList.remove('bg-amber-50/60', 'border-amber-300');
+                });
+                updateProgress();
+            });
+
+            // 초기 상태 실행
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

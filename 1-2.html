@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기초 및 말뚝 공사 안전 관리 시스템</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', sans-serif;
+        }
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            line-height: 1.7;
+        }
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            padding: 50px 20px;
+            text-align: center;
+            border-bottom: 5px solid #e11d48;
+        }
+        header h1 {
+            font-size: 2.3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        header p {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .section {
+            background: #fff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .section h2 {
+            font-size: 1.6rem;
+            color: #0f172a;
+            margin-bottom: 25px;
+            position: relative;
+            padding-left: 15px;
+        }
+        .section h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 4px;
+            bottom: 4px;
+            width: 5px;
+            background-color: #ef4444;
+            border-radius: 4px;
+        }
+        .danger-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 600px) {
+            .danger-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .danger-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #f97316;
+        }
+        .danger-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 8px;
+            color: #ea580c;
+        }
+        .case-box {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .case-title {
+            background: #f8fafc;
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #e2e8f0;
+            color: #dc2626;
+        }
+        .case-body {
+            padding: 20px;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+        /* 체크리스트 스타일 */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        .checklist-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border-top: 6px solid #10b981;
+        }
+        .checklist-box h2 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #0f172a;
+        }
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 12px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            background: #10b981;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .check-item:hover {
+            background: #f8fafc;
+        }
+        .check-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 4px;
+            cursor: pointer;
+            accent-color: #10b981;
+        }
+        .check-text {
+            font-size: 0.95rem;
+            color: #334155;
+        }
+        .check-item.checked .check-text {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+        .fact-section h2::before {
+            background-color: #3b82f6;
+        }
+        .fact-content {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 20px;
+            border-radius: 8px;
+            color: #1e3a8a;
+            font-size: 0.95rem;
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: #0f172a;
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>기초 및 말뚝 공사 안전 보건 포털</h1>
+        <p>현장 위험 요인 분석, 실제 재해 사례 및 인터랙티브 안전 체크리스트</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="main-content">
+            
+            <div class="section">
+                <h2>1. 핵심 위험 요인 (Risk Factors)</h2>
+                <div class="danger-grid">
+                    <div class="danger-card">
+                        <h3>장비 전도 위험</h3>
+                        <p>연약지반 미보강 또는 경사지 작업 시 중량이 큰 항타기가 중심을 잃고 전도될 위험</p>
+                    </div>
+                    <div class="danger-card">
+                        <h3>낙하 및 비래</h3>
+                        <p>말뚝 인양용 와이어로프의 마모·파단으로 인해 PHC 파일이 떨어져 하부 근로자를 타격할 위험</p>
+                    </div>
+                    <div class="danger-card">
+                        <h3>지반 붕괴 및 함몰</h3>
+                        <p>굴착 시 발생하는 토압을 이기지 못하고 흙막이가 붕괴되거나 주변 지반이 가라앉을 위험</p>
+                    </div>
+                    <div class="danger-card">
+                        <h3>충돌 및 협착</h3>
+                        <p>항타기 및 백호 등 대형 장비의 회전 반경 내부로 근로자가 무단 진입하여 발생하는 끼임 위험</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>2. 주요 중대재해 사례</h2>
+                
+                <div class="case-box">
+                    <div class="case-title">사례 ① 지반 침하로 인한 항타기 전도 사고</div>
+                    <div class="case-body">
+                        대형 아파트 건설 현장에서 주행로 지반 보강(철판 가설)이 미흡한 상태로 항타기가 무리하게 이동하다가, 우측 궤도 하부 지반이 침하되면서 장비가 전도되어 인근 도로변 건물을 타격하고 전선이 파단된 재해입니다.
+                    </div>
+                </div>
+
+                <div class="case-box">
+                    <div class="case-title">사례 ② 인양 와이어로프 파단에 따른 파일 낙하</div>
+                    <div class="case-body">
+                        크레인을 이용하여 콘크리트 말뚝을 수직으로 인양하던 중, 노후화된 와이어로프가 중량을 견디지 못하고 파단되면서 말뚝이 그대로 낙하하여 하부에서 말뚝 정렬을 돕던 신호수가 사망한 사고입니다.
+                    </div>
+                </div>
+
+                <div class="case-box">
+                    <div class="case-title">사례 ③ 흙막이 지보공 붕괴에 의한 매몰</div>
+                    <div class="case-body">
+                        기초 자리를 다지기 위해 굴착을 진행하던 중 지반 연약화와 용수 발생으로 인해 흙막이 벽체가 버티지 못하고 무너져 내렸으며, 내부 굴착면 최하부에서 작업 중이던 근로자가 토사에 완전히 매몰된 재해입니다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="section fact-section">
+                <h2>3. 팩트체크 및 법적 근거</h2>
+                <div class="fact-content">
+                    <p style="margin-bottom: 10px;"><strong>데이터 출처:</strong> 고용노동부 중대재해 사이렌 시스템 및 한국산업안전보건공단(KOSHA) 안전보건 규칙</p>
+                    <p><strong>기술적 판단 근거:</strong> 산업안전보건기준에 관한 규칙 제221조(아우트리거 등의 사용) 및 제38조(사전조사 및 작업계획서의 작성 등)에 의거하여, 항타기 작업 시 지반의 부등침하 방지 조치와 와이어로프 안전 계수 확보는 단순 권장 사항이 아닌 법적 필수 의무 사항입니다.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sidebar">
+            <div class="checklist-box">
+                <h2>작업 전 안전 체크리스트</h2>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">오늘의 점검 결과를 마킹하세요.</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span class="check-text">작업 구역 내 지반 다짐 및 철판 포설 상태 양호한가?</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span class="check-text">항타기 권상용 와이어로프의 손상 및 마모 상태가 없는가?</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span class="check-text">장비 반경 내 출입 통제선 설치 및 신호수가 배치되었는가?</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span class="check-text">지하매설물(가스, 전기 등) 위치를 사전 확인했는가?</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span class="check-text">작업 전 근로자 대상 TBM 안전 교육을 실시했는가?</span>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <input type="checkbox" onchange="updateProgress()">
+                    <span class="check-text">근로자들이 안전모, 안전화 등 개인 보호구를 착용했는가?</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 안전보건 가이드 시스템. 본 체크리스트는 건설 현장 실무 보조용 화면입니다.</p>
+    </footer>
+
+    <script>
+        // 체크박스 클릭 시 텍스트 스타일 변경 및 진행률 업데이트 함수
+        function toggleCheck(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            // 클릭 타겟이 체크박스 자체가 아닐 때만 토글 (중복 실행 방지)
+            if (event.target !== checkbox) {
+                checkbox.checked = !checkbox.checked;
+            }
+            
+            if (checkbox.checked) {
+                element.classList.add('checked');
+            } else {
+                element.classList.remove('checked');
+            }
+            updateProgress();
+        }
+
+        // 전체 진행률을 계산해주는 함수
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+            const total = checkboxes.length;
+            let checkedCount = 0;
+
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    checkedCount++;
+                }
+            });
+
+            const percent = total > 0 ? Math.round((checkedCount / total) * 100) : 0;
+            document.getElementById('progressBar').style.width = percent + '%';
+        }
+    </script>
+
+</body>
+</html>

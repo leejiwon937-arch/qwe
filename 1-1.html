@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>토공사 안전 가이드</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                    },
+                    colors: {
+                        safety: {
+                            yellow: '#FFB800',
+                            red: '#E53935',
+                            blue: '#1E3A8A',
+                            dark: '#111827',
+                            gray: '#F3F4F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Custom scrollbar for a polished look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-safety-gray text-gray-800 antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md shadow-sm z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0 flex items-center">
+                    <i class="fa-solid fa-helmet-safety text-safety-yellow text-2xl mr-2"></i>
+                    <span class="font-bold text-xl tracking-tight text-safety-dark">건설안전<span class="text-safety-blue">포털</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#hero" class="text-gray-600 hover:text-safety-blue font-medium transition-colors">홈</a>
+                    <a href="#risks" class="text-gray-600 hover:text-safety-blue font-medium transition-colors">주요 위험 요인</a>
+                    <a href="#cases" class="text-gray-600 hover:text-safety-blue font-medium transition-colors">재해 사례</a>
+                    <a href="#solutions" class="text-gray-600 hover:text-safety-blue font-medium transition-colors">안전 수칙</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-safety-dark focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#hero" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-safety-blue hover:bg-gray-50">홈</a>
+                <a href="#risks" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-safety-blue hover:bg-gray-50">주요 위험 요인</a>
+                <a href="#cases" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-safety-blue hover:bg-gray-50">재해 사례</a>
+                <a href="#solutions" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-safety-blue hover:bg-gray-50">안전 수칙</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-20 pb-32 flex items-center min-h-[80vh] overflow-hidden">
+        <div class="absolute inset-0 bg-safety-dark z-0">
+            <!-- Background pattern -->
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#FFB800 1px, transparent 1px); background-size: 30px 30px;"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-safety-dark via-safety-dark to-transparent z-10"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in-up">
+                    <span class="inline-block py-1 px-3 rounded-full bg-safety-yellow/20 text-safety-yellow text-sm font-bold mb-4 border border-safety-yellow/30">
+                        <i class="fa-solid fa-triangle-exclamation mr-1"></i> 토공사 특별 안전 경보
+                    </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+                        토공사 현장, <br>
+                        <span class="text-safety-yellow">지반과 장비</span>가<br>
+                        생명을 위협합니다.
+                    </h1>
+                    <p class="text-lg text-gray-300 mb-8 max-w-xl leading-relaxed">
+                        토공사 현장에서는 지반의 상태와 중장비의 움직임이 가장 큰 변수입니다. 한순간의 방심이 돌이킬 수 없는 중대재해로 이어질 수 있습니다.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#risks" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-bold rounded-lg text-safety-dark bg-safety-yellow hover:bg-yellow-500 transition-colors shadow-lg shadow-yellow-500/30">
+                            위험 요인 확인하기 <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </a>
+                        <a href="#solutions" class="inline-flex justify-center items-center px-6 py-3 border-2 border-white text-base font-bold rounded-lg text-white hover:bg-white/10 transition-colors">
+                            핵심 안전 수칙
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden lg:block relative fade-in-up" style="transition-delay: 0.2s;">
+                    <!-- Illustrative abstract shapes representing construction/earthwork -->
+                    <div class="relative w-full aspect-square max-w-md mx-auto">
+                        <div class="absolute inset-0 bg-safety-yellow rounded-full blur-3xl opacity-20 animate-pulse"></div>
+                        <div class="absolute top-10 right-10 w-48 h-48 bg-safety-yellow rounded-2xl rotate-12 shadow-2xl opacity-80 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                            <i class="fa-solid fa-person-digging text-7xl text-safety-dark"></i>
+                        </div>
+                        <div class="absolute bottom-10 left-10 w-56 h-56 bg-safety-blue rounded-full shadow-2xl opacity-90 border-4 border-white/10 flex items-center justify-center">
+                            <i class="fa-solid fa-truck-monster text-7xl text-white"></i>
+                        </div>
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-xl shadow-2xl z-10 flex flex-col items-center justify-center border-b-4 border-safety-red">
+                            <i class="fa-solid fa-triangle-exclamation text-4xl text-safety-red mb-2"></i>
+                            <span class="font-bold text-sm">위험 구역</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: Major Risk Factors -->
+    <section id="risks" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-3xl md:text-4xl font-bold text-safety-dark mb-4">1. 토공사 주요 위험 요인 ⚠️</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    눈에 보이지 않는 지반의 변화와 육중한 중장비의 움직임은 치명적인 사고의 원인이 됩니다.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Risk 1 -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 fade-in-up relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-safety-red transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                    <div class="w-14 h-14 bg-red-100 text-safety-red rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-mountain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">토사 붕괴 <span class="text-xs bg-safety-red text-white px-2 py-1 rounded-full ml-2 align-middle">가장 치명적</span></h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        지반이 약해지거나 적절한 경사도를 확보하지 않아 굴착면(흙벽)이 무너져 내리는 현상입니다. 가장 치명적인 사망 사고의 원인입니다.
+                    </p>
+                </div>
+
+                <!-- Risk 2 -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 fade-in-up relative overflow-hidden group" style="transition-delay: 0.1s;">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-safety-yellow transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                    <div class="w-14 h-14 bg-yellow-100 text-yellow-700 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-truck-front"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">중장비 충돌 및 협착</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        굴착기, 덤프트럭 등 건설기계의 사각지대에 작업자가 들어가 있거나, 신호 불량으로 인해 부딪히거나 끼이는 사고입니다.
+                    </p>
+                </div>
+
+                <!-- Risk 3 -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 fade-in-up relative overflow-hidden group" style="transition-delay: 0.2s;">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-orange-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                    <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">중장비 전도</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        연약 지반 위에서 장비를 무리하게 조작하거나, 굴착단부(끝부분)에 너무 가깝게 접근해 장비가 중심을 잃고 넘어지는 현상입니다.
+                    </p>
+                </div>
+
+                <!-- Risk 4 -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 fade-in-up relative overflow-hidden group" style="transition-delay: 0.3s;">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-purple-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-person-falling"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">추락</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        파놓은 구덩이(굴착면) 주변에 안전 난간이나 덮개가 없어 작업자가 떨어지는 사고입니다.
+                    </p>
+                </div>
+
+                <!-- Risk 5 -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 fade-in-up relative overflow-hidden group md:col-span-2 lg:col-span-1" style="transition-delay: 0.4s;">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-pipe"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">지하 매설물 파손</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        사전 조사 미흡으로 땅속에 묻힌 도시가스관, 고압 전선, 상하수도관을 건드려 발생하는 폭발이나 감전, 침수 사고입니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Accident Cases -->
+    <section id="cases" class="py-20 bg-gray-900 text-white relative">
+        <!-- Decorative background elements -->
+        <div class="absolute top-0 left-0 w-full h-2 bg-safety-red"></div>
+        <div class="absolute -right-40 top-40 w-96 h-96 bg-safety-red/5 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 fade-in-up">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">2. 대표적인 재해 사례 🚨</h2>
+                    <p class="text-lg text-gray-400 max-w-2xl">
+                        실제 발생했던 안타까운 사고 사례입니다. 똑같은 실수를 반복하지 않기 위해 철저히 분석하고 대비해야 합니다.
+                    </p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Case 1 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-2xl fade-in-up">
+                    <div class="p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8">
+                        <div class="md:w-1/4 flex-shrink-0">
+                            <div class="bg-gray-900 rounded-lg p-4 h-full border border-gray-700 flex flex-col justify-center items-center text-center">
+                                <div class="w-12 h-12 bg-safety-red/20 rounded-full flex items-center justify-center text-safety-red mb-3">
+                                    <i class="fa-solid fa-person-digging text-xl"></i>
+                                </div>
+                                <span class="text-safety-red font-bold text-sm tracking-widest mb-1">매몰 사고</span>
+                                <h4 class="text-xl font-bold text-white leading-tight">굴착 작업 중<br>토사 붕괴</h4>
+                            </div>
+                        </div>
+                        <div class="md:w-3/4 flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-3 text-sm text-gray-400">
+                                <span class="bg-gray-700 px-2 py-1 rounded"><i class="fa-regular fa-calendar mr-1"></i> 2026년 6월 26일</span>
+                                <span>인천 서구 시설물 매설 공사 현장</span>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed mb-4">
+                                2~3m 깊이로 파놓은 굴착면 내부로 들어가 작업하던 중 흙벽이 무너져 내린 사고입니다. 작업자가 쏟아진 토사에 매몰되어 사망했으며, <strong>흙막이 지보공 설치 등 안전 수칙 준수 여부가 쟁점</strong>이 되었습니다.
+                            </p>
+                            <div class="mt-auto">
+                                <span class="inline-flex items-center text-sm text-gray-400 border border-gray-700 bg-gray-800 px-3 py-1.5 rounded-md">
+                                    <i class="fa-regular fa-newspaper mr-2"></i> 관련 기사: 한전 시설물 매설 중 토사 붕괴…50대 노동자 사망 (연합뉴스)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-2xl fade-in-up" style="transition-delay: 0.1s;">
+                    <div class="p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8">
+                        <div class="md:w-1/4 flex-shrink-0">
+                            <div class="bg-gray-900 rounded-lg p-4 h-full border border-gray-700 flex flex-col justify-center items-center text-center">
+                                <div class="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center text-safety-yellow mb-3">
+                                    <i class="fa-solid fa-truck-front text-xl"></i>
+                                </div>
+                                <span class="text-safety-yellow font-bold text-sm tracking-widest mb-1">협착 사고</span>
+                                <h4 class="text-xl font-bold text-white leading-tight">굴착기 충돌 및 협착<br><span class="text-sm font-normal text-gray-400">(사각지대 진입)</span></h4>
+                            </div>
+                        </div>
+                        <div class="md:w-3/4 flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-3 text-sm text-gray-400">
+                                <span class="bg-gray-700 px-2 py-1 rounded"><i class="fa-solid fa-location-dot mr-1"></i> 경기 성남시 판교</span>
+                                <span>신축 건설 현장 지하 공간</span>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed mb-4">
+                                철골 작업을 준비하던 작업자가 이동 중인 굴착기에 치여 사망한 사고입니다. 중장비 주변의 좁은 공간(사각지대)에서 작업할 때, <strong>통제 바리케이드나 신호수 배치가 얼마나 중요한지</strong> 보여주는 대표적인 사례입니다.
+                            </p>
+                            <div class="mt-auto">
+                                <span class="inline-flex items-center text-sm text-gray-400 border border-gray-700 bg-gray-800 px-3 py-1.5 rounded-md">
+                                    <i class="fa-regular fa-newspaper mr-2"></i> 관련 기사: 판교 건설현장서 작업자 1명 굴착기에 치여 사망 (중부일보)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 3 -->
+                <div class="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-2xl fade-in-up" style="transition-delay: 0.2s;">
+                    <div class="p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8">
+                        <div class="md:w-1/4 flex-shrink-0">
+                            <div class="bg-gray-900 rounded-lg p-4 h-full border border-gray-700 flex flex-col justify-center items-center text-center">
+                                <div class="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center text-orange-500 mb-3">
+                                    <i class="fa-solid fa-truck-ramp-box text-xl"></i>
+                                </div>
+                                <span class="text-orange-500 font-bold text-sm tracking-widest mb-1">전도 사고</span>
+                                <h4 class="text-xl font-bold text-white leading-tight">굴착기 전도<br><span class="text-sm font-normal text-gray-400">(연약 지반/유도자 부재)</span></h4>
+                            </div>
+                        </div>
+                        <div class="md:w-3/4 flex flex-col justify-center">
+                            <div class="flex items-center gap-3 mb-3 text-sm text-gray-400">
+                                <span class="bg-gray-700 px-2 py-1 rounded"><i class="fa-solid fa-location-dot mr-1"></i> 전북 김제 새만금</span>
+                                <span>수변도시 건설 현장</span>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed mb-4">
+                                굴착기를 이용해 평탄화되지 않은 연약 지반 구간을 빠져나오던 중, 장비가 한쪽으로 쏠리며 물웅덩이로 넘어간 사고입니다. 장비 운전자가 빠져나오지 못해 사망했으며, 조사 결과 <strong>작업 반경 내에 유도자나 신호수가 전혀 배치되지 않았던 것</strong>으로 드러났습니다.
+                            </p>
+                            <div class="mt-auto">
+                                <span class="inline-flex items-center text-sm text-gray-400 border border-gray-700 bg-gray-800 px-3 py-1.5 rounded-md">
+                                    <i class="fa-regular fa-newspaper mr-2"></i> 관련 기사: 김제 굴착기 기사 사망사고…“신호수 미배치 상태서 작업 투입” (안전저널)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Core Countermeasures -->
+    <section id="solutions" class="py-20 bg-safety-gray relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <div class="inline-block bg-green-100 text-green-700 px-4 py-1.5 rounded-full font-bold text-sm mb-4">
+                    <i class="fa-solid fa-shield-halved mr-1"></i> 지반 안정화 및 장비 통제
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-safety-dark mb-4">3. 핵심 대처방안 및 안전 수칙 🛡️</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    사고를 막기 위해서는 <strong class="text-safety-blue">'지반 안정화'</strong>와 <strong class="text-safety-blue">'장비 통제'</strong>가 최우선입니다. 아래의 핵심 수칙을 반드시 준수하십시오.
+                </p>
+            </div>
+
+            <!-- Custom Tabs -->
+            <div class="fade-in-up">
+                <div class="flex flex-col sm:flex-row border-b border-gray-300 mb-8" role="tablist">
+                    <button onclick="switchTab('tab-1')" id="btn-tab-1" class="flex-1 py-4 px-6 text-center font-bold text-lg border-b-4 border-safety-blue text-safety-blue bg-white rounded-t-lg transition-all focus:outline-none" role="tab" aria-selected="true">
+                        <i class="fa-solid fa-mountain-city mr-2"></i> ① 붕괴 예방 <span class="text-xs bg-safety-red text-white px-2 py-0.5 rounded-full ml-1">가장 중요</span>
+                    </button>
+                    <button onclick="switchTab('tab-2')" id="btn-tab-2" class="flex-1 py-4 px-6 text-center font-bold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 hover:bg-white/50 rounded-t-lg transition-all focus:outline-none" role="tab" aria-selected="false">
+                        <i class="fa-solid fa-helmet-safety mr-2"></i> ② 건설기계 안전 확보
+                    </button>
+                    <button onclick="switchTab('tab-3')" id="btn-tab-3" class="flex-1 py-4 px-6 text-center font-bold text-lg border-b-4 border-transparent text-gray-500 hover:text-gray-700 hover:bg-white/50 rounded-t-lg transition-all focus:outline-none" role="tab" aria-selected="false">
+                        <i class="fa-solid fa-clipboard-check mr-2"></i> ③ 사전 계획 수립
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="bg-white rounded-2xl p-6 md:p-10 shadow-xl border border-gray-100 min-h-[400px]">
+                    
+                    <!-- Tab 1: 붕괴 예방 -->
+                    <div id="tab-1" class="tab-content block animate-fade-in">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-8 flex items-center border-l-4 border-safety-blue pl-4">
+                            지반 무너짐 방지 수칙
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-blue-50/50 rounded-xl p-6 border border-blue-100">
+                                <div class="w-12 h-12 bg-safety-blue text-white rounded-full flex items-center justify-center text-xl mb-4 shadow-md">1</div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-3">흙막이 지보공 설치</h4>
+                                <p class="text-gray-700">
+                                    일정 깊이<strong class="text-safety-blue">(통상 1.5m) 이상</strong> 굴착 시 반드시 무너짐을 방지하는 흙막이(가시설)를 견고하게 설치해야 합니다.
+                                </p>
+                            </div>
+                            <div class="bg-blue-50/50 rounded-xl p-6 border border-blue-100">
+                                <div class="w-12 h-12 bg-safety-blue text-white rounded-full flex items-center justify-center text-xl mb-4 shadow-md">2</div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-3">안전 기울기 확보</h4>
+                                <p class="text-gray-700">
+                                    지질 상태(모래, 점토, 암석 등)에 따라 법적으로 정해진 <strong class="text-safety-blue">안전한 경사도(안식각)</strong>를 유지하며 파내야 합니다. 무리한 수직 굴착은 금물입니다.
+                                </p>
+                            </div>
+                            <div class="bg-blue-50/50 rounded-xl p-6 border border-blue-100">
+                                <div class="w-12 h-12 bg-safety-blue text-white rounded-full flex items-center justify-center text-xl mb-4 shadow-md">3</div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-3">철저한 배수 조치</h4>
+                                <p class="text-gray-700">
+                                    비가 오면 땅이 무거워지고 약해지므로, 물이 고이거나 스며들지 않도록 <strong class="text-safety-blue">주변에 배수로를 철저히 확보</strong>하고 빗물 유입을 차단해야 합니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: 건설기계 안전 확보 -->
+                    <div id="tab-2" class="tab-content hidden animate-fade-in">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-8 flex items-center border-l-4 border-safety-yellow pl-4">
+                            중장비 운영 안전 수칙
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div class="bg-yellow-50/50 rounded-xl p-6 border border-yellow-100">
+                                <div class="w-12 h-12 bg-safety-yellow text-safety-dark rounded-full flex items-center justify-center text-xl font-bold mb-4 shadow-md">1</div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-3">전담 신호수(유도자) 배치</h4>
+                                <p class="text-gray-700">
+                                    장비가 움직이는 곳에는 <strong class="text-safety-dark">반드시 신호수를 배치</strong>하고, 운전자와 신호수 간의 수신호 등 소통 체계를 명확히 해야 합니다.
+                                </p>
+                            </div>
+                            <div class="bg-yellow-50/50 rounded-xl p-6 border border-yellow-100">
+                                <div class="w-12 h-12 bg-safety-yellow text-safety-dark rounded-full flex items-center justify-center text-xl font-bold mb-4 shadow-md">2</div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-3">작업 반경 내 출입 통제</h4>
+                                <p class="text-gray-700">
+                                    굴착기 스윙 반경 등 위험 구역에는 안전통로 외 <strong class="text-safety-dark">작업자의 출입을 엄격히 금지</strong>하는 바리케이드나 접근 방지책을 쳐야 합니다.
+                                </p>
+                            </div>
+                            <div class="bg-yellow-50/50 rounded-xl p-6 border border-yellow-100">
+                                <div class="w-12 h-12 bg-safety-yellow text-safety-dark rounded-full flex items-center justify-center text-xl font-bold mb-4 shadow-md">3</div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-3">안전 장치 일일 점검</h4>
+                                <p class="text-gray-700">
+                                    후방 카메라, 경보기, 자동 정지 장치 등이 제대로 작동하는지 <strong class="text-safety-dark">작업 전 매일 확인</strong>하고 이상 발견 시 즉시 조치해야 합니다.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: 사전 계획 수립 -->
+                    <div id="tab-3" class="tab-content hidden animate-fade-in">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-8 flex items-center border-l-4 border-green-500 pl-4">
+                            작업 전 필수 점검 사항
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="bg-green-50/50 rounded-xl p-6 border border-green-100 flex flex-col md:flex-row gap-6 items-start">
+                                <div class="w-16 h-16 shrink-0 bg-green-500 text-white rounded-2xl flex items-center justify-center text-3xl shadow-lg">
+                                    <i class="fa-solid fa-map-location-dot"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900 mb-3">철저한 사전 조사</h4>
+                                    <p class="text-gray-700 mb-4">
+                                        굴착 전 지하 매설물(가스, 통신, 전력) 도면을 반드시 확인하고 지표면 탐사를 진행해야 합니다. 지장물 파손 시 대형 폭발이나 감전으로 이어질 수 있습니다.
+                                    </p>
+                                    <ul class="text-sm text-gray-600 space-y-2">
+                                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> 지하시설물 통합정보 확인</li>
+                                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> 시험 터파기(줄파기) 선행</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="bg-green-50/50 rounded-xl p-6 border border-green-100 flex flex-col md:flex-row gap-6 items-start">
+                                <div class="w-16 h-16 shrink-0 bg-green-500 text-white rounded-2xl flex items-center justify-center text-3xl shadow-lg">
+                                    <i class="fa-solid fa-users-viewfinder"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold text-gray-900 mb-3">작업계획서 작성 및 TBM</h4>
+                                    <p class="text-gray-700 mb-4">
+                                        장비 이동 경로, 흙을 쌓아둘 위치, 투입 인원 등을 담은 상세한 작업계획서를 작성해야 합니다.
+                                    </p>
+                                    <ul class="text-sm text-gray-600 space-y-2">
+                                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> 서면 작업계획서 작성 및 승인</li>
+                                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i> TBM(Tool Box Meeting)을 통한 작업자 위험 인지 교육</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <style>
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.4s ease-out forwards;
+            }
+        </style>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 pt-16 pb-8 border-t-4 border-safety-yellow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fa-solid fa-helmet-safety text-safety-yellow text-3xl mr-3"></i>
+                    <span class="font-bold text-2xl text-white">건설안전<span class="text-safety-blue">포털</span></span>
+                </div>
+                <div class="text-center md:text-right">
+                    <h3 class="text-xl font-bold text-safety-yellow mb-2">"안전은 타협할 수 없는 최우선 가치입니다."</h3>
+                    <p class="text-gray-400">오늘도 무사히, 당신의 귀가를 가족이 기다립니다.</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; 2026 건설안전포털. All rights reserved. (토공사 안전 가이드)</p>
+                <div class="mt-4 md:mt-0 space-x-4">
+                    <a href="#" class="hover:text-white transition-colors">이용약관</a>
+                    <a href="#" class="hover:text-white transition-colors">개인정보처리방침</a>
+                    <a href="#" class="hover:text-white transition-colors">안전신문고</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Mobile menu toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-md');
+                nav.classList.replace('bg-white/90', 'bg-white/95');
+            } else {
+                nav.classList.remove('shadow-md');
+                nav.classList.replace('bg-white/95', 'bg-white/90');
+            }
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('block');
+            });
+            
+            // Reset all buttons styling
+            const buttons = [
+                {id: 'btn-tab-1', activeColor: 'border-safety-blue', textColor: 'text-safety-blue', defaultText: 'text-gray-500'},
+                {id: 'btn-tab-2', activeColor: 'border-safety-yellow', textColor: 'text-safety-yellow', defaultText: 'text-gray-500'},
+                {id: 'btn-tab-3', activeColor: 'border-green-500', textColor: 'text-green-500', defaultText: 'text-gray-500'}
+            ];
+
+            buttons.forEach(btn => {
+                const el = document.getElementById(btn.id);
+                el.classList.remove(btn.activeColor, btn.textColor, 'bg-white');
+                el.classList.add('border-transparent', btn.defaultText, 'hover:bg-white/50');
+                el.setAttribute('aria-selected', 'false');
+            });
+
+            // Show selected content
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById(tabId).classList.add('block');
+            
+            // Highlight selected button
+            const activeBtn = buttons.find(b => b.id === `btn-${tabId}`);
+            const activeEl = document.getElementById(activeBtn.id);
+            activeEl.classList.remove('border-transparent', activeBtn.defaultText, 'hover:bg-white/50');
+            activeEl.classList.add(activeBtn.activeColor, activeBtn.textColor, 'bg-white');
+            activeEl.setAttribute('aria-selected', 'true');
+        }
+
+        // Intersection Observer for scroll animations (Fade in up)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Animate only once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>

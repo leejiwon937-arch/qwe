@@ -1,0 +1,692 @@
+!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFE-TECH 건설안전 플랫폼</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Poppins:wght@200;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        safety: {
+                            orange: '#f97316',
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                            yellow: '#eab308',
+                            red: '#ef4444',
+                            emerald: '#10b981'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.4) 0%, rgba(15, 23, 42, 0.85) 100%), 
+                              url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .banner-bg {
+            background-image: linear-gradient(to right, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.6) 100%), 
+                              url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200');
+            background-size: cover;
+            background-position: center;
+        }
+        .text-shadow-lg {
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-white font-sans text-slate-800 flex flex-col min-h-screen">
+
+    <!-- 1. HEADER (Navigation) -->
+    <header class="absolute top-0 left-0 w-full z-50 bg-transparent text-white border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <span class="font-poppins font-extrabold text-2xl tracking-widest text-white">SAFE-TECH</span>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
+                    <a href="#intro" class="hover:text-safety-orange transition-colors duration-200">회사소개</a>
+                    <a href="#hazards" class="hover:text-safety-orange transition-colors duration-200">위험요인</a>
+                    <a href="#cases" class="hover:text-safety-orange transition-colors duration-200">재해사례</a>
+                    <a href="#checklist" class="hover:text-safety-orange transition-colors duration-200">안전체크리스트</a>
+                    <a href="#notices" class="hover:text-safety-orange transition-colors duration-200">고객센터</a>
+                </nav>
+
+                <!-- Utility Icon -->
+                <div class="hidden md:block">
+                    <i class="fa-solid fa-bars text-xl cursor-pointer hover:text-safety-orange transition-colors"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION -->
+    <section class="hero-bg h-screen w-full flex items-center justify-center relative text-white">
+        <div class="text-center px-6 max-w-4xl space-y-6">
+            <span class="text-sm font-semibold tracking-widest text-safety-orange uppercase">Green & Safe Innovation</span>
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight text-shadow-lg">
+                지속 가능한 안전 기술로<br class="hidden sm:inline"> 더 깨끗하고 안전한 내일을 만듭니다.
+            </h1>
+            <p class="text-slate-200 text-sm sm:text-lg max-w-xl mx-auto font-light leading-relaxed">
+                정밀한 설비 보호와 빈틈없는 작업 가이드라인으로<br>근로자의 생명과 자연이 공존하는 완벽한 현장을 만듭니다.
+            </p>
+        </div>
+
+        <!-- Scroll Down Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 opacity-70 hover:opacity-100 transition-opacity duration-200">
+            <span class="text-xs uppercase tracking-widest [writing-mode:vertical-lr]">Scroll Down</span>
+            <div class="w-[1px] h-12 bg-white/50 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-safety-orange animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. MAIN CONTENTS WRAPPER -->
+    <main class="w-full">
+
+        <!-- Custom Notification Toast Container -->
+        <div id="toast" class="fixed top-24 right-4 sm:right-8 bg-slate-900 text-white px-5 py-3 rounded-lg shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-[-100px] opacity-0 z-50">
+            <div id="toast-icon" class="text-safety-orange"><i class="fa-solid fa-circle-info"></i></div>
+            <p id="toast-text" class="text-sm font-medium"></p>
+        </div>
+
+        <!-- INTRO AREA -->
+        <section id="intro" class="py-20 bg-slate-50 border-b border-slate-100">
+            <div class="max-w-4xl mx-auto text-center px-6 space-y-4">
+                <span class="text-xs font-bold uppercase tracking-widest text-safety-orange">Safety Overview</span>
+                <h2 class="text-3xl font-bold text-slate-900">외벽 도장 및 유리공사 안전 표준 가이드</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
+                    달비계 및 외벽 마감 작업은 높은 위험도를 가집니다. 본 포탈은 현장의 사각지대를 해소하고 추락 위험요인을 미리 점검할 수 있도록 실시간 인터랙티브 점검 시스템을 제공합니다.
+                </p>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 1: HAZARDS (위험요인 - 이미지 & 지그재그 그리드) -->
+        <!-- ============================================== -->
+        <section id="hazards" class="py-24 space-y-32 max-w-7xl mx-auto px-6 lg:px-8">
+            
+            <!-- Row 1: 대기 / 로프파단 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <!-- Image Left -->
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg aspect-[4/3] bg-slate-100">
+                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800" 
+                         alt="고소 도장작업" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                         onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=High-rise+Work'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                </div>
+                <!-- Text Right -->
+                <div class="space-y-6">
+                    <span class="text-xs font-bold tracking-wider text-safety-orange uppercase">Hazard 01</span>
+                    <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">섬유로프 마모 및 모서리 파단 위험</h3>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                        콘크리트 옹벽 에지(Edge)나 날카로운 석재 마감 마찰 부위에 방지용 패드를 설치하지 않아 발생하는 파단 리스크입니다. 마모된 로프는 작업자 탑승 중 미세 진동에 의해서도 예고 없이 급작스럽게 끊어져 대형 추락사고를 초래합니다.
+                    </p>
+                    <button onclick="showDetailsModal('로프 마모 파단 위험', '로프 파단 사고를 방지하기 위해 날카로운 모서리 접촉면에 특수 고무나 두꺼운 마모 방지 패드를 필수로 고정해야 합니다. 정기적인 로프 결 크랙 진단 역시 필수입니다.')" class="inline-flex items-center text-xs font-bold text-slate-800 border-b-2 border-slate-900 pb-1 hover:text-safety-orange hover:border-safety-orange transition-all duration-200">
+                        자세히 보기 <i class="fa-solid fa-chevron-right ml-1.5 text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Row 2: 수질 / 구명줄 미체결 (지그재그) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <!-- Text Left -->
+                <div class="space-y-6 order-2 lg:order-1">
+                    <span class="text-xs font-bold tracking-wider text-safety-orange uppercase">Hazard 02</span>
+                    <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">독립 수직 구명줄 미설치 및 미체결</h3>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                        달비계용 메인 작업선 이외에 긴급 추락을 억제해 줄 수 있는 독립 구명줄(Life line)을 생략하거나, 설치했더라도 번거롭다는 이유로 안전대의 죔줄을 구명줄에 걸지 않고 무단 작업 중 미끄러지며 대형 참사로 직결됩니다.
+                    </p>
+                    <button onclick="showDetailsModal('수직 구명줄 미체결 리스크', '어떤 상황에서도 근로자의 전신 안전대는 달비계 자체가 아닌 옥상 고정점으로부터 수직으로 단독으로 축소 설치된 별개의 수직 구명줄에 안전 블록을 활용하여 독립 결속해야만 생명이 유지됩니다.')" class="inline-flex items-center text-xs font-bold text-slate-800 border-b-2 border-slate-900 pb-1 hover:text-safety-orange hover:border-safety-orange transition-all duration-200">
+                        자세히 보기 <i class="fa-solid fa-chevron-right ml-1.5 text-[10px]"></i>
+                    </button>
+                </div>
+                <!-- Image Right -->
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg aspect-[4/3] bg-slate-100 order-1 lg:order-2">
+                    <img src="https://images.unsplash.com/photo-1581094288338-2314dddb7eed?q=80&w=800" 
+                         alt="구명줄 장비" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                         onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=Safety+Harness'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                </div>
+            </div>
+
+            <!-- Row 3: 정수시설 / 편심하중 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <!-- Image Left -->
+                <div class="relative group overflow-hidden rounded-2xl shadow-lg aspect-[4/3] bg-slate-100">
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800" 
+                         alt="유리 설치 현장" 
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                         onerror="this.src='https://placehold.co/800x600/f1f5f9/475569?text=Glass+Skyscraper'">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                </div>
+                <!-- Text Right -->
+                <div class="space-y-6">
+                    <span class="text-xs font-bold tracking-wider text-safety-orange uppercase">Hazard 03</span>
+                    <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">유리 설치 시 편심 하중 및 중심 이탈</h3>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                        외벽 커튼월 유리창을 양중하는 도중, 무거운 유리를 거치하기 위해 편심(한쪽 쏠림) 하중을 계산하지 않고 무리하게 힘을 가하다가 기계식 또는 간이 달비계 자체가 균형을 잃고 한순간에 전복 또는 추락하는 리스크입니다.
+                    </p>
+                    <button onclick="showDetailsModal('편심 하중 유리작업 대책', '대형 유리는 단독 인력 조절을 제한하며 반드시 전용 압착 양중기, 윈치 등 기계장비를 병행하고 작업 발판의 수평 모니터링 경보 시스템을 갖추어야 전도를 원천 방지합니다.')" class="inline-flex items-center text-xs font-bold text-slate-800 border-b-2 border-slate-900 pb-1 hover:text-safety-orange hover:border-safety-orange transition-all duration-200">
+                        자세히 보기 <i class="fa-solid fa-chevron-right ml-1.5 text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ============================================== -->
+        <!-- SECTION 2: MIDDLE PROMOTION BANNER (지속 가능한 환경 배너 스타일) -->
+        <!-- ============================================== -->
+        <section class="banner-bg py-28 text-white relative">
+            <div class="absolute inset-0 bg-slate-900/80"></div>
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+                <div class="max-w-2xl space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-safety-orange">About Safety Campaign</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold leading-tight">지속 가능한 무재해 환경을 위한<br>첨단 안전 기술의 새로운 기준</h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed font-light">
+                        SAFE-TECH는 가설 구조물 설치 기준부터 개인 보건 장비 실시간 관측까지 안전의 사각지대 제로를 추구합니다. 현장의 목소리와 기술이 공존하는 더 건강한 일터를 약속드립니다.
+                    </p>
+                </div>
+                <a href="#checklist" class="border border-white/40 hover:border-white hover:bg-white/10 px-8 py-3.5 rounded-lg text-sm font-bold tracking-wider transition-all duration-200 self-start md:self-auto uppercase">
+                    체크리스트 바로가기
+                </a>
+            </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- SECTION 3: ACCIDENT CASES (위험사례) -->
+        <!-- ============================================== -->
+        <section id="cases" class="py-24 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 space-y-12">
+                <div class="border-b border-slate-200 pb-5 text-center">
+                    <span class="text-xs font-bold uppercase tracking-widest text-safety-orange">Actual Accidents</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">안전 수칙 해이로 인한 중대 재해 사례</h2>
+                    <p class="text-sm sm:text-base text-slate-500 mt-1">예방 조치를 누락하여 초래된 실제 사고 사례를 통해 무재해 경각심을 고취합니다.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Case 1 -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                        <div class="bg-safety-red p-5 text-white flex justify-between items-center">
+                            <span class="text-xs font-bold tracking-wider uppercase bg-red-600 px-2.5 py-1 rounded">중대 사망재해</span>
+                            <span class="text-xs opacity-90"><i class="fa-solid fa-calendar mr-1"></i>아파트 외벽 도장</span>
+                        </div>
+                        <div class="p-6 flex-grow space-y-4 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">로프 쓸림 파단으로 인한 15층 높이 추락</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    옥상 벽체 콘크리트 에지에 별도의 날카로움 방지 보호 몰딩이나 고무 매트를 설치하지 않았습니다. 미세한 유동 스윙에 의해 주 로프가 서서히 깎여나가다 작업 도중 한순간에 파손되었습니다. 수직 구명줄 또한 가설해두지 않아 참사로 직결되었습니다.
+                                </p>
+                            </div>
+                            <div class="border-t border-slate-100 pt-4 mt-4">
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">사고 교훈</h4>
+                                <p class="text-xs text-safety-red font-medium mt-1">로프 전용 코너 가이드 필수 거치 및 마모 여부 수시 육안 판별 의무화</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case 2 -->
+                    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+                        <div class="bg-amber-500 p-5 text-white flex justify-between items-center">
+                            <span class="text-xs font-bold tracking-wider uppercase bg-amber-600 px-2.5 py-1 rounded">중대 추락재해</span>
+                            <span class="text-xs opacity-90"><i class="fa-solid fa-calendar mr-1"></i>빌딩 외벽 유리보수</span>
+                        </div>
+                        <div class="p-6 flex-grow space-y-4 flex flex-col justify-between">
+                            <div class="space-y-2">
+                                <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">유리 거치 과정 중 편심 전도</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">
+                                    가설 곤돌라 위에서 대형 유리판을 고층으로 받던 중 유리 한 점의 무게 쏠림(편심하중)이 순식간에 구조대를 한 방향으로 뒤집어 엎었습니다. 탑승한 두 명 모두 자신의 안전장치를 주 로프나 곤돌라 프레임에 임의 연결한 탓에 작업대와 함께 동반 추락하였습니다.
+                                </p>
+                            </div>
+                            <div class="border-t border-slate-100 pt-4 mt-4">
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wide">사고 교훈</h4>
+                                <p class="text-xs text-amber-600 font-medium mt-1">개인 구명장치는 절대 가설 프레임이 아닌 독립 수직 구명줄에만 결합해야 함</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- SECTION 4: CHECKLIST (자가점검 체크리스트) -->
+        <!-- ============================================== -->
+        <section id="checklist" class="py-24 max-w-7xl mx-auto px-6 lg:px-8 space-y-12">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-safety-orange">Safety System</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">3. 작업 단계별 자가점검 체크리스트</h2>
+                    <p class="text-sm text-slate-500 mt-2">오늘 작업 시작 전, 아래 필수 문항을 철저히 확인하고 자가진단을 완수하세요.</p>
+                </div>
+                <!-- Controls -->
+                <div class="flex items-center space-x-2 self-start md:self-auto">
+                    <button onclick="resetChecklist()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-lg text-sm transition-all duration-200">
+                        <i class="fa-solid fa-rotate-right mr-1"></i>초기화
+                    </button>
+                    <button onclick="completeCheck()" class="bg-safety-emerald text-white font-bold px-4 py-2 rounded-lg text-sm shadow-sm hover:bg-emerald-600 transition-all duration-200">
+                        <i class="fa-solid fa-paper-plane mr-1"></i>제출 완료
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Progress Widget -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-indigo-950 text-white rounded-2xl p-6 shadow-lg">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="space-y-1 text-center sm:text-left">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">오늘의 작업장 실시간 피드백</p>
+                        <h3 class="text-lg sm:text-xl font-extrabold" id="checklist-feedback-title">자가 점검이 아직 수행되지 않았습니다.</h3>
+                        <p class="text-xs sm:text-sm text-slate-300" id="checklist-feedback-desc">현장에서 안전 상태를 직접 확인하고 체크리스트를 탭해 채워나가세요.</p>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="text-4xl sm:text-5xl font-black text-safety-orange font-poppins" id="checklist-pct">0%</div>
+                        <span class="text-xs text-slate-400 mt-1">달성률</span>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-700 h-2.5 rounded-full mt-5 overflow-hidden">
+                    <div class="bg-gradient-to-r from-orange-500 to-emerald-500 h-full rounded-full transition-all duration-500" id="checklist-progress-bar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Checklist Tabs -->
+            <div class="flex border-b border-slate-200" id="checklist-tabs">
+                <button onclick="setChecklistCategory('all')" id="chk-tab-all" class="px-5 py-3 border-b-2 border-safety-orange text-safety-orange font-bold text-sm">전체 점검</button>
+                <button onclick="setChecklistCategory('before')" id="chk-tab-before" class="px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm">1. 작업 전</button>
+                <button onclick="setChecklistCategory('during')" id="chk-tab-during" class="px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm">2. 작업 중</button>
+                <button onclick="setChecklistCategory('after')" id="chk-tab-after" class="px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm">3. 작업 후</button>
+            </div>
+
+            <!-- Checklist Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="checklist-items-container">
+                <!-- Checklist items populated via JS -->
+            </div>
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- SECTION 5: NOTICE BOARD (리더넥스 참고자료 게시판 스타일) -->
+        <!-- ============================================== -->
+        <section id="notices" class="py-24 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-6 lg:px-8 space-y-12">
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-widest text-safety-orange">Notice & News</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900">현장 안전 공지사항</h2>
+                    <p class="text-slate-500 text-sm sm:text-base">SAFE-TECH 플랫폼의 최신 소식과 핵심 공지사항을 전해드립니다.</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto divide-y divide-slate-200 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <!-- Notice 1 -->
+                    <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" onclick="showDetailsModal('추석 연휴 대비 가이드', '연휴 시작 전 옥상 결속 설비 임의 방치를 전면 엄금하며, 모든 로프를 회수하여 건조 저장소로 이전하십시오.')">
+                        <div class="flex items-start space-x-6">
+                            <!-- Date Box -->
+                            <div class="flex flex-col items-center justify-center text-center">
+                                <span class="text-3xl font-black text-slate-300 font-poppins">30</span>
+                                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">2026.09</span>
+                            </div>
+                            <!-- Title Content -->
+                            <div class="space-y-1">
+                                <h3 class="font-bold text-slate-800 hover:text-safety-orange transition-colors duration-150 text-base sm:text-lg">2026 추석 연휴 휴무 전 특별 특별안전 점검 안내</h3>
+                                <p class="text-xs text-slate-500 font-light">연휴 장기 미가동 기간 중 가설 구조물 및 달비계 결속 자재 안전 수거 기준 공고</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-300 hidden sm:block"></i>
+                    </div>
+
+                    <!-- Notice 2 -->
+                    <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" onclick="showDetailsModal('세이프텍 안전 플랫폼 오픈', '고객 여러분들이 달비계, 유리 거치 등 고위험 마감 공사 정보를 직관적으로 열람하고 체크하도록 리뉴얼하였습니다.')">
+                        <div class="flex items-start space-x-6">
+                            <!-- Date Box -->
+                            <div class="flex flex-col items-center justify-center text-center">
+                                <span class="text-3xl font-black text-slate-300 font-poppins">18</span>
+                                <span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">2026.09</span>
+                            </div>
+                            <!-- Title Content -->
+                            <div class="space-y-1">
+                                <h3 class="font-bold text-slate-800 hover:text-safety-orange transition-colors duration-150 text-base sm:text-lg">SAFE-TECH 모바일 반응형 안전 포탈 오픈</h3>
+                                <p class="text-xs text-slate-500 font-light">고객 및 공사 담당자분들의 편의를 위한 반응형 자가 안전검수 인터랙션 페이지 서비스 시작</p>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-300 hidden sm:block"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 4. MODAL FOR DETAILED VIEW -->
+    <div id="details-modal" class="fixed inset-0 bg-slate-900/60 flex items-center justify-center z-[100] p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
+                <h3 id="modal-title" class="font-bold text-lg">상세 정보</h3>
+                <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-8 space-y-4">
+                <p id="modal-desc" class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    상세 텍스트 내용이 여기에 렌더링됩니다.
+                </p>
+                <div class="pt-4 flex justify-end">
+                    <button onclick="closeDetailsModal()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-lg text-xs tracking-wider">
+                        확인
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. FOOTER -->
+    <footer class="bg-slate-950 text-white border-t border-white/5 py-12 sm:py-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 space-y-12">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                <!-- Info Left -->
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="font-poppins font-extrabold text-xl tracking-wider text-safety-orange">SAFE-TECH</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-bold">SAFETY PLATFORM</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-400 font-light max-w-xl leading-relaxed">
+                        안전관리책임자 : 임승완 <span class="mx-1">|</span> 주소 : 서울특별시 강남구 테헤란로 123<br>
+                        사업자등록번호 : 123-45-67890 <span class="mx-1">|</span> 이메일 : safety@safetech.com
+                    </p>
+                </div>
+
+                <!-- Representative Call Number Right (Reference Image style) -->
+                <div class="text-left md:text-right space-y-1">
+                    <span class="text-xs text-slate-400 tracking-wider">대표 고객상담 안내</span>
+                    <p class="text-2xl sm:text-3xl font-black font-poppins text-safety-orange">대표번호 1533-8997</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] sm:text-xs text-slate-500 font-light">
+                <p>Copyright © 2026 SAFE-TECH 건설안전 캠페인 지원 시스템. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-white transition-colors">개인정보처리방침</a>
+                    <span>|</span>
+                    <a href="#" class="hover:text-white transition-colors">이메일무단수집거부</a>
+                    <span>|</span>
+                    <a href="#" class="hover:text-white transition-colors">Admin</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================== -->
+    <!-- JAVASCRIPT FOR INTERACTIVE LOGIC -->
+    <!-- ============================================== -->
+    <script>
+        // 1. MOBILE MENU TOGGLE
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if(mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        function toggleMobileMenu() {
+            if (mobileMenu) mobileMenu.classList.add('hidden');
+        }
+
+        // 2. DETAILS MODAL HANDLERS
+        function showDetailsModal(title, desc) {
+            const modal = document.getElementById('details-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDesc = document.getElementById('modal-desc');
+
+            modalTitle.textContent = title;
+            modalDesc.textContent = desc;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('.transform').classList.remove('scale-95');
+            }, 50);
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('details-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 3. TOAST NOTIFICATION SYSTEM
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastText.textContent = message;
+
+            if (type === 'success') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>';
+            } else if (type === 'warning') {
+                toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500 text-lg"></i>';
+            } else {
+                toastIcon.innerHTML = '<i class="fa-solid fa-circle-info text-safety-orange text-lg"></i>';
+            }
+
+            // Slide in
+            toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // Hide after 3.5 seconds
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 3500);
+        }
+
+        // 4. ANNOTATION EXPLORER (SVG)
+        const annotations = {
+            anchor: {
+                title: '견고한 고정점 (Anchor Point)',
+                desc: '로프 결속점은 하중과 진동을 충분히 견딜 수 있는 빌딩 옥상의 철근 기둥 또는 고강도 인장 구조물(2개소 이상)에 고정해야 합니다. 연약한 가설 파이프나 파손되기 쉬운 안전난간 등에 임시로 묶어선 안 됩니다.'
+            },
+            protector: {
+                title: '로프 마찰 방지 보호대 (Edge Protector)',
+                desc: '섬유로프가 콘크리트 슬래브 에지나 마감 면의 날카로운 돌출부와 접촉하여 마모 및 파단되는 것을 원천 차단하기 위해, 고무 매트, 가죽 패드 혹은 보호용 PVC 호스로 접촉 에지부를 견고하게 감싸 보호합니다.'
+            },
+            lifeline: {
+                title: '독립형 수직 구명줄 (Safety Lifeline)',
+                desc: '달비계 작업용 메인 로프와는 별개로 작업자 자신의 안전대 고리를 연결하기 위한 구명줄을 하부 지상까지 곧게 내려 가설합니다. 주선이 파단되어 가설 작업대가 탈락하더라도 최종적으로 작업자의 낙하를 방지합니다.'
+            }
+        };
+
+        function showAnnotation(key) {
+            const annotationBox = document.getElementById('annotation-box');
+            const annotationTitle = document.getElementById('annotation-title');
+            const annotationDesc = document.getElementById('annotation-desc');
+
+            annotationBox.classList.add('opacity-40', 'scale-95');
+
+            setTimeout(() => {
+                annotationTitle.innerHTML = `<span class="bg-amber-100 text-amber-700 text-xs px-2.5 py-1 rounded-md mr-2">확인정보</span> ${annotations[key].title}`;
+                annotationDesc.textContent = annotations[key].desc;
+                annotationBox.classList.remove('opacity-40', 'scale-95');
+            }, 150);
+        }
+
+        // 5. INTERACTIVE CHECKLIST DATA & LOGIC
+        const checklistData = [
+            // Before Category
+            { id: 1, category: 'before', text: '작업자가 안전모(턱끈 조임 상태 확인) 및 가슴/허리 전신식 안전대를 완벽히 착용했는가?', checked: false },
+            { id: 2, category: 'before', text: '주 탑승 로프 외에 별도로 유선 설치한 수직 구명줄(Life line)을 확실히 갖추었는가?', checked: false },
+            { id: 3, category: 'before', text: '달비계용 섬유 로프에 미세 마모, 소선 파손, 부식 징후가 없는지 정밀 육안 점검을 마쳤는가?', checked: false },
+            { id: 4, category: 'before', text: '섬유로프 고정점을 난간대 등이 아닌 슬래브 옥상의 기둥 등 견고한 부착물 2개소 이상에 결속했는가?', checked: false },
+            { id: 5, category: 'before', text: '옹벽 콘크리트 날카로운 모서리에 로프 쓸림 방지 보호대(가죽/고무 패드 등)를 빠짐없이 체결했는가?', checked: false },
+            { id: 6, category: 'before', text: '풍속 10m/s 이하의 정상 작업 허용 기준 및 양호한 기후 조건을 사전에 관측/체크했는가?', checked: false },
+            
+            // During Category
+            { id: 7, category: 'during', text: '달비계 탑승과 동시에 개인 신체 안전대 고리를 수직 구명줄(추락방지기)에 안전하게 걸었는가?', checked: false },
+            { id: 8, category: 'during', text: '달비계(1인 전용 작업대) 내부 및 탑승대에 2인 이상의 초과 작업자가 과도하게 오르지 않았는가?', checked: false },
+            { id: 9, category: 'during', text: '자재 및 낙하물 방지를 위해 지상 하부에 안전 테이프를 치고 신호수를 정식 배치해 출입을 통제했는가?', checked: false },
+            { id: 10, category: 'during', text: '무거운 외벽 유리를 양중 및 설치하는 전 과정에 걸쳐 무게 불균형(편심) 예방 장비를 가동 중인가?', checked: false },
+            
+            // After Category
+            { id: 11, category: 'after', text: '일과 종료 후 장비를 실외 방치하지 않고 회수하여 건조하고 안전한 자재 보관 창고로 이송했는가?', checked: false },
+            { id: 12, category: 'after', text: '외벽 유리 공사 후 실란트 폐용기, 각종 드라이버 공구 등 낙하 우려가 있는 가설물을 완전히 회수 수거했는가?', checked: false },
+            { id: 13, category: 'after', text: '금일 사용한 부품 고정 장치나 지지대 로프에 손상이 관측되었을 경우 교체 폐기 등록 처리를 완료했는가?', checked: false },
+        ];
+
+        let activeChecklistCategory = 'all';
+
+        function setChecklistCategory(category) {
+            activeChecklistCategory = category;
+            
+            // Reset active tabs highlight
+            document.querySelectorAll('#checklist-tabs button').forEach(btn => {
+                btn.className = "px-5 py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold text-sm";
+            });
+
+            // Set current tab active highlight
+            document.getElementById('chk-tab-' + category).className = "px-5 py-3 border-b-2 border-safety-orange text-safety-orange font-bold text-sm";
+            
+            renderChecklist();
+        }
+
+        function toggleCheckItem(id) {
+            const item = checklistData.find(x => x.id === id);
+            if (item) {
+                item.checked = !item.checked;
+                updateChecklistProgress();
+                renderChecklist();
+                
+                if (item.checked) {
+                    showToast(`확인 완료: ${item.text.slice(0, 15)}...`, 'success');
+                }
+            }
+        }
+
+        function updateChecklistProgress() {
+            const total = checklistData.length;
+            const checkedCount = checklistData.filter(x => x.checked).length;
+            const percentage = Math.round((checkedCount / total) * 100);
+
+            // Update DOM Elements
+            const pctText = document.getElementById('checklist-pct');
+            const progressBar = document.getElementById('checklist-progress-bar');
+            
+            pctText.textContent = percentage + '%';
+            progressBar.style.width = percentage + '%';
+
+            // Set Feedback message based on safety rating
+            const feedbackTitle = document.getElementById('checklist-feedback-title');
+            const feedbackDesc = document.getElementById('checklist-feedback-desc');
+
+            if (percentage === 0) {
+                feedbackTitle.textContent = "자가 점검이 시작되지 않았습니다.";
+                feedbackDesc.textContent = "사고 예방의 지름길입니다. 오늘 점검 목록을 하나씩 확인해 체크하세요.";
+            } else if (percentage < 50) {
+                feedbackTitle.textContent = "⚠️ 현장 예방 대비율 매우 취약";
+                feedbackDesc.textContent = "안전망 부실 리스크가 대단히 높은 상태입니다. 작업 개시 전 필수 점검을 마쳐야 합니다.";
+            } else if (percentage < 100) {
+                feedbackTitle.textContent = "🚧 안전 대비 보통 준수 상태";
+                feedbackDesc.textContent = "대다수 준비 과정이 마쳐졌으나 미완료 항목에 의한 잔류 위험이 존재합니다. 마저 체크해 주세요.";
+            } else {
+                feedbackTitle.textContent = "🎉 무재해 100% 안전 달성!";
+                feedbackDesc.textContent = "오늘의 현장 가이드가 완벽히 통제되었습니다. 소중한 무재해 안전 시공을 완수하세요.";
+            }
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById('checklist-items-container');
+            container.innerHTML = '';
+
+            const filtered = checklistData.filter(item => {
+                if (activeChecklistCategory === 'all') return true;
+                return item.category === activeChecklistCategory;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-center col-span-2 py-6">선택한 카테고리에 점검 항목이 존재하지 않습니다.</p>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                let badge = "";
+                if (item.category === 'before') badge = `<span class="text-[10px] bg-blue-50 text-blue-600 px-2 py-0.5 rounded font-bold">1. 작업 전</span>`;
+                else if (item.category === 'during') badge = `<span class="text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-bold">2. 작업 중</span>`;
+                else badge = `<span class="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded font-bold">3. 작업 후</span>`;
+
+                const isCheckedClass = item.checked 
+                    ? "border-emerald-200 bg-emerald-50/40 text-slate-800" 
+                    : "border-slate-200 bg-white text-slate-700";
+                
+                const checkedIcon = item.checked 
+                    ? `<span class="text-emerald-500 text-xl"><i class="fa-solid fa-square-check"></i></span>` 
+                    : `<span class="text-slate-300 text-xl"><i class="fa-regular fa-square"></i></span>`;
+
+                const cardHtml = `
+                    <div onclick="toggleCheckItem(${item.id})" class="flex items-center justify-between p-4 rounded-xl border ${isCheckedClass} cursor-pointer transition-all duration-150 hover:shadow-sm">
+                        <div class="flex items-start space-x-3 pr-4">
+                            <div class="mt-0.5">${checkedIcon}</div>
+                            <div class="space-y-1">
+                                <p class="text-sm sm:text-base font-medium ${item.checked ? 'line-through text-slate-400' : ''}">${item.text}</p>
+                                <div class="flex items-center space-x-2">
+                                    ${badge}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        function resetChecklist() {
+            checklistData.forEach(x => x.checked = false);
+            updateChecklistProgress();
+            renderChecklist();
+            showToast("모든 체크리스트가 초기화되었습니다.", "warning");
+        }
+
+        function completeCheck() {
+            const uncheckedCount = checklistData.filter(x => !x.checked).length;
+            if (uncheckedCount > 0) {
+                showToast(`아직 점검 완료되지 않은 항목이 ${uncheckedCount}개 있습니다. 마저 점검해 주세요.`, 'warning');
+            } else {
+                showToast("안전 점검 완료! 규정 수칙에 맞춰 안전 시공을 진행하십시오.", "success");
+            }
+        }
+
+        // INITIALIZATION ON WINDOW LOAD
+        window.onload = function() {
+            updateChecklistProgress();
+            renderChecklist();
+        };
+
+    </script>
+</body>
+</html>

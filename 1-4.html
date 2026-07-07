@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가설공사 스마트 안전 가이드 시스템</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter & Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        safety: {
+                            black: '#111827',
+                            dark: '#1F2937',
+                            gray: '#4B5563',
+                            light: '#F3F4F6',
+                            yellow: '#F59E0B',
+                            orange: '#EF4444',
+                            green: '#10B981',
+                            blue: '#3B82F6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1F2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4B5563;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F59E0B;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col overflow-x-hidden">
+
+<header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 no-print z-10 sticky top-0">
+    <div class="flex items-center gap-3">
+        <div class="bg-yellow-500 text-slate-950 p-2.5 rounded-lg font-black text-xl animate-pulse">
+            <i class="fa-solid class fa-helmet-safety"></i>
+        </div>
+        <div>
+            <h1 class="text-xl font-bold tracking-tight flex items-center gap-2">
+                스마트 가설구조물 <span class="text-yellow-500">안전 관리 포트폴리오</span>
+            </h1>
+            <p class="text-xs text-slate-400">거푸집 · 동바리 중대재해 예방 기술 가이드 및 인터랙티브 시스템</p>
+        </div>
+    </div>
+    
+    <!-- Real-time Ticker / Status -->
+    <div class="flex items-center gap-4 text-xs md:text-sm bg-slate-950/50 px-4 py-2 rounded-lg border border-slate-800">
+        <span class="flex items-center gap-1.5 text-emerald-400">
+            <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+            KDS 21 50 00 기준 반영됨
+        </span>
+        <div class="h-4 w-px bg-slate-800"></div>
+        <span id="live-timer" class="text-slate-400">Loading time...</span>
+    </div>
+</header>
+
+<div class="flex flex-1 flex-col lg:flex-row no-print">
+    <!-- Sidebar Navigation -->
+    <aside class="w-full lg:w-64 bg-slate-900 border-r border-slate-800 p-4 flex flex-col gap-2">
+        <p class="text-xs font-bold text-slate-500 px-3 uppercase tracking-wider mb-2">메뉴 네비게이션</p>
+        <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold transition-all bg-yellow-500 text-slate-950 hover:bg-yellow-400">
+            <i class="fa-solid fa-chart-line w-5 text-center"></i> 종합 대시보드
+        </button>
+        <button onclick="switchTab('simulator')" id="btn-simulator" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold text-slate-300 transition-all hover:bg-slate-800 hover:text-white">
+            <i class="fa-solid fa-person-falling-burst w-5 text-center"></i> 붕괴 역학 시뮬레이터
+        </button>
+        <button onclick="switchTab('cases')" id="btn-cases" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold text-slate-300 transition-all hover:bg-slate-800 hover:text-white">
+            <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i> 실제 중대재해 아카이브
+        </button>
+        <button onclick="switchTab('checklist')" id="btn-checklist" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold text-slate-300 transition-all hover:bg-slate-800 hover:text-white">
+            <i class="fa-solid fa-list-check w-5 text-center"></i> 스마트 안전 체크리스트
+        </button>
+        <button onclick="switchTab('calculator')" id="btn-calculator" class="tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold text-slate-300 transition-all hover:bg-slate-800 hover:text-white">
+            <i class="fa-solid fa-calculator w-5 text-center"></i> 가설 보강 엔지니어 계산기
+        </button>
+
+        <div class="mt-auto pt-6 border-t border-slate-800">
+            <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 text-xs text-yellow-400">
+                <p class="font-bold mb-1"><i class="fa-solid fa-circle-info"></i> 무단 조기 해체 금지!</p>
+                <p class="text-slate-400 leading-relaxed">상부 타설 중일 때는 반드시 직하부 3개 층의 동바리를 무단 해체 없이 완전 존치해야 합니다.</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto max-w-full">
+        
+        <!-- TAB 1: DASHBOARD -->
+        <section id="view-dashboard" class="tab-view flex flex-col gap-6">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-yellow-500/20 via-orange-500/10 to-slate-900 border border-yellow-500/30 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="space-y-3 max-w-2xl">
+                    <span class="bg-yellow-500 text-slate-950 font-bold text-xs px-2.5 py-1 rounded-full uppercase tracking-wider">현장 작동성 중심</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">거푸집 · 동바리 붕괴사고 ZERO 캠페인</h2>
+                    <p class="text-sm md:text-base text-slate-300 leading-relaxed">
+                        가설공사는 영구 구조물과 달리 일시 설치되어 사용되므로, 구조적 마진이 작고 현장 오차가 사고로 직결됩니다. 
+                        구조 검토서대로 수평 연결재를 설치하고, 지반 다짐을 철저히 확인하십시오.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button onclick="switchTab('simulator')" class="bg-yellow-500 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-yellow-400 transition flex items-center gap-2 shadow-lg shadow-yellow-500/10">
+                            <i class="fa-solid fa-play"></i> 붕괴 시뮬레이터 작동하기
+                        </button>
+                        <button onclick="switchTab('checklist')" class="bg-slate-800 text-white border border-slate-700 font-bold px-5 py-2.5 rounded-lg text-sm hover:bg-slate-700 transition flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check"></i> 타설 전 체크리스트 점검
+                        </button>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto flex justify-center">
+                    <div class="relative bg-slate-900/90 border border-slate-800 p-6 rounded-2xl flex flex-col items-center gap-2 shadow-xl">
+                        <div class="w-24 h-24 rounded-full border-4 border-yellow-500 flex items-center justify-center text-2xl font-bold text-yellow-400 bg-yellow-500/10">
+                            98%
+                        </div>
+                        <p class="text-xs font-semibold text-slate-400">자가 안전점검 적합율</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid: 3대 핵심 위험요인 정보 요약 -->
+            <div>
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-skull-crossbones text-red-500"></i> 가설공사 3대 핵심 위험요인 (Key Risk Factors)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl hover:border-yellow-500/40 transition group">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition">
+                            01
+                        </div>
+                        <h4 class="font-bold text-base mb-2 group-hover:text-yellow-400 transition">구조검토 무시 및 '좌굴(Buckling)'</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            동바리 조립 높이가 높음에도 수평연결재를 생략하거나 가새를 누락하여 콘크리트 타설 시 미세 편심에 의해 동바리가 완전히 꺾여 무너지는 현상입니다.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl hover:border-yellow-500/40 transition group">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition">
+                            02
+                        </div>
+                        <h4 class="font-bold text-base mb-2 group-hover:text-yellow-400 transition">콘크리트 굳기 전 '무단 조기 해체'</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            콘크리트 압축강도가 설계기준에 상응하게 도달하기 전에 빠른 작업 진척을 위해 임의로 하부 지탱용 동바리를 철거해 대량 연쇄 붕괴를 초래합니다.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl hover:border-yellow-500/40 transition group">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-xl font-bold mb-4 group-hover:scale-110 transition">
+                            03
+                        </div>
+                        <h4 class="font-bold text-base mb-2 group-hover:text-yellow-400 transition">부적합한 지반 지지 & 접합 불량</h4>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            자갈이나 연약 지반 위에 두께 규격에 맞는 깔목·깔판 없이 동바리를 지지해 타설 하중 작동 시 지반이 침하하며 편심 횡압력이 발생하는 붕괴입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Guidelines -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Checklist summary -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold flex items-center gap-2"><i class="fa-solid fa-list-check text-yellow-500"></i> 실무 가설기둥 자가점검 현황</h4>
+                        <button onclick="switchTab('checklist')" class="text-xs text-yellow-500 hover:underline">자세히 보기 <i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <span class="text-sm">조립도 비치 및 실측 일치 상태</span>
+                            <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-semibold"><i class="fa-solid fa-check"></i> 적합</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <span class="text-sm">2m 이내 양방향 수평연결재 가새</span>
+                            <span id="chk-status-horizontal" class="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-semibold"><i class="fa-solid fa-triangle-exclamation"></i> 점검 필요</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                            <span class="text-sm">동바리 하부 깔판 · 깔목 완비상태</span>
+                            <span class="bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-semibold"><i class="fa-solid fa-check"></i> 적합</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Warning Widget -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-bold flex items-center gap-2 mb-2 text-orange-400">
+                            <i class="fa-solid fa-circle-exclamation text-xl animate-bounce"></i> 안전관리 행동 수칙 데일리 경고
+                        </h4>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                            현장의 타설 구역 주변에는 기상이변, 고온다습 또는 집중하중이 걸릴 가능성이 높습니다. 
+                            콘크리트 펌프카 작동 전에 <strong>반드시 동바리 수평 연결재 유실 및 조임 볼트가 체결 해제</strong>되어 있지 않은지 실측 정밀 점검을 실시하십시오.
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-950/80 p-3 rounded-xl border border-slate-800 text-xs">
+                        <i class="fa-solid fa-shield-halved text-yellow-500 text-lg"></i>
+                        <span class="text-slate-400">본 시스템은 <b>산업안전보건법 및 국토교통부 건설기준코드 (KDS 21 50 00)</b> 표준 지침을 근거로 개발되었습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: INTERACTIVE SIMULATOR -->
+        <section id="view-simulator" class="tab-view flex flex-col gap-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-vial text-yellow-500"></i> 동바리 공학 붕괴 역학 시뮬레이터</h2>
+                    <p class="text-sm text-slate-400">슬래브 하중과 보강재 체결 상태에 따른 동바리 기둥의 좌굴(Buckling) 한계를 시각적으로 테스트해 보십시오.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="resetSimulation()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm hover:bg-slate-700 transition">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> 초기화
+                    </button>
+                    <button id="btn-pour" onclick="togglePouring()" class="bg-yellow-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm hover:bg-yellow-400 transition">
+                        <i class="fa-solid fa-play"></i> 타설 시작
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Controls and Settings Panel -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col gap-6">
+                    <h3 class="font-bold border-b border-slate-800 pb-3 text-sm text-slate-300 uppercase tracking-wider">매개변수 실시간 조절</h3>
+                    
+                    <!-- Bracing Option -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold flex items-center justify-between">
+                            <span>수평 연결재 및 가새 보강 여부</span>
+                            <span id="bracing-badge" class="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">미설치 (위험)</span>
+                        </label>
+                        <div class="flex gap-2 mt-1">
+                            <button onclick="setBracing(false)" id="btn-bracing-off" class="flex-1 py-2 rounded-lg text-xs font-bold transition border border-red-500 bg-red-500/20 text-red-400">
+                                미설치 (위험)
+                            </button>
+                            <button onclick="setBracing(true)" id="btn-bracing-on" class="flex-1 py-2 rounded-lg text-xs font-bold transition border border-slate-700 bg-slate-950 text-slate-400 hover:border-emerald-500">
+                                규격 조립 (보강)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ground Condition -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold flex items-center justify-between">
+                            <span>하부 지반 상태 (깔판 유무)</span>
+                            <span id="ground-badge" class="text-xs text-yellow-500 font-bold">연약 지반 (다짐 불량)</span>
+                        </label>
+                        <select id="select-ground" onchange="updateGround()" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-lg text-sm text-slate-300 focus:border-yellow-500 outline-none">
+                            <option value="weak">연약지반 / 깔목·깔판 미설치</option>
+                            <option value="solid">견고다짐 / 두께 45mm 깔판 완비</option>
+                        </select>
+                    </div>
+
+                    <!-- Pouring Load Slider -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-semibold">콘크리트 타설 하중 (슬래브 두께)</span>
+                            <span id="val-load" class="text-yellow-500 font-bold">20% (가벼움)</span>
+                        </div>
+                        <input type="range" id="slider-load" min="0" max="100" value="20" oninput="changeLoad(this.value)" class="w-full accent-yellow-500 bg-slate-950 h-2 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-xs text-slate-500">
+                            <span>0% (자중)</span>
+                            <span>설계한계 (100%)</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase">구조 상태 피드백</h4>
+                        <div id="sim-feedback-card" class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg text-xs">
+                            <p id="sim-status-txt" class="font-bold text-emerald-400"><i class="fa-solid fa-circle-check"></i> 구조안전성 유지</p>
+                            <p id="sim-desc-txt" class="text-slate-400 mt-1 leading-relaxed">구조검토 범위 내 하중입니다. 기둥 중심선 기준 꺾임 발생이 보고되지 않았습니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Rendering Area -->
+                <div class="lg:col-span-2 flex flex-col gap-4">
+                    <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl flex flex-col gap-3 relative overflow-hidden">
+                        <!-- Warning flashing overlay -->
+                        <div id="sim-alarm" class="absolute inset-0 bg-red-600/10 pointer-events-none opacity-0 transition-opacity z-10 animate-pulse border border-red-500"></div>
+                        
+                        <div class="flex justify-between items-center z-10">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> 2D 동바리 횡하중 좌굴 역학 실시간 분석
+                            </span>
+                            <div class="text-xs bg-slate-950 border border-slate-800 px-3 py-1 rounded-full text-slate-300">
+                                FPS: 60 | Physics Active
+                            </div>
+                        </div>
+
+                        <!-- Canvas -->
+                        <div class="relative w-full aspect-[4/3] bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+                            <canvas id="simCanvas" class="absolute inset-0 w-full h-full block"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: DISASTER CASES -->
+        <section id="view-cases" class="tab-view flex flex-col gap-6 hidden">
+            <div>
+                <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-yellow-500"></i> 실제 중대재해 사례 분석 (Case Studies)</h2>
+                <p class="text-sm text-slate-400">공식 조사 결과를 바탕으로 가설 구조물 결함이 초래한 참사를 공학적으로 규명합니다.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Case Card 1 -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between group hover:border-red-500/40 transition">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-red-500/15 text-red-400 text-xs font-extrabold px-3 py-1 rounded-full border border-red-500/20">CASE 01</span>
+                            <span class="text-xs text-slate-500 font-bold">2015년 2월</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-yellow-400 transition mb-3">용인 교량 슬래브 동바리 연쇄 좌굴 참사</h3>
+                        
+                        <div class="space-y-3 text-sm text-slate-400 leading-relaxed mb-6">
+                            <p class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs">
+                                <strong class="text-red-400">피해규모:</strong> 작업자 8명 추락 (2명 사망, 6명 부상)
+                            </p>
+                            <p>
+                                교량 상부 콘크리트 타설 중 가설 동바리가 차례대로 꺾이며 상판 면적 전체가 순식간에 도미노식으로 도심 도로 한복판에 붕괴함.
+                            </p>
+                            <p class="border-t border-slate-800 pt-3 text-xs text-slate-500">
+                                <strong class="text-slate-300">핵심 원인:</strong> 높이가 높았음에도 불구하고 <strong>수평 연결재 및 대각 가새 고정을 누락</strong>하여 수직 가설재가 전단력을 감당하지 못해 국부 좌굴을 유발함.
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="loadCaseIntoSim('case1')" class="w-full bg-slate-950 border border-slate-800 hover:border-yellow-500 py-2.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-vial"></i> 시뮬레이터에서 원인 재현
+                    </button>
+                </div>
+
+                <!-- Case Card 2 -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between group hover:border-red-500/40 transition">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-red-500/15 text-red-400 text-xs font-extrabold px-3 py-1 rounded-full border border-red-500/20">CASE 02</span>
+                            <span class="text-xs text-slate-500 font-bold">2022년 1월</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-yellow-400 transition mb-3">광주 아파트 신축공사 연쇄 붕괴 사고</h3>
+                        
+                        <div class="space-y-3 text-sm text-slate-400 leading-relaxed mb-6">
+                            <p class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs">
+                                <strong class="text-red-400">피해규모:</strong> 외벽 및 슬래브 연쇄 이탈 (6명 사망, 1명 부상)
+                            </p>
+                            <p>
+                                39층 슬래브 콘크리트 타설 중에 고정 및 동바리 지지가 파열되어 아래층으로 유성 하중이 쏟아져 무려 16개 층이 한꺼번에 와르르 무너짐.
+                            </p>
+                            <p class="border-t border-slate-800 pt-3 text-xs text-slate-500">
+                                <strong class="text-slate-300">핵심 원인:</strong> 공정 속도 단축을 위해 <strong>하부 3개 층의 가설 지지대(동바리)를 콘크리트의 양생 강도 확인도 없이 무단으로 사전 탈거</strong>한 것이 연쇄적 하중 지지 실패로 이어짐.
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="loadCaseIntoSim('case2')" class="w-full bg-slate-950 border border-slate-800 hover:border-yellow-500 py-2.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-vial"></i> 시뮬레이터에서 원인 재현
+                    </button>
+                </div>
+
+                <!-- Case Card 3 -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between group hover:border-red-500/40 transition">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-red-500/15 text-red-400 text-xs font-extrabold px-3 py-1 rounded-full border border-red-500/20">CASE 03</span>
+                            <span class="text-xs text-slate-500 font-bold">2022년 10월</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-100 group-hover:text-yellow-400 transition mb-3">안성 물류창고 데크플레이트 및 가설 붕괴</h3>
+                        
+                        <div class="space-y-3 text-sm text-slate-400 leading-relaxed mb-6">
+                            <p class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs">
+                                <strong class="text-red-400">피해규모:</strong> 가설재 및 바닥 붕괴 (3명 사망, 2명 부상)
+                            </p>
+                            <p>
+                                4층 바닥 타설 중 데크플레이트 및 시스템 동바리가 중심을 잃고 통째로 쏟아져 10m 하방으로 가설공사 근로자들이 모두 파묻힘.
+                            </p>
+                            <p class="border-t border-slate-800 pt-3 text-xs text-slate-500">
+                                <strong class="text-slate-300">핵심 원인:</strong> 조립도상의 <strong>시스템 동바리 지탱 기둥 간격을 임의 확장</strong>하여 힘을 고르게 분배하지 못하였으며, 데크플레이트 접합부 끝자락의 걸침 기하 불량에 의한 구조적 파탄임.
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="loadCaseIntoSim('case3')" class="w-full bg-slate-950 border border-slate-800 hover:border-yellow-500 py-2.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-vial"></i> 시뮬레이터에서 원인 재현
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: CHECKLIST -->
+        <section id="view-checklist" class="tab-view flex flex-col gap-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-clipboard-check text-yellow-500"></i> 현장 스마트 안전 점검 체크리스트</h2>
+                    <p class="text-sm text-slate-400">타설 펌프카 가동 개시 전 필수적인 실측 점검 대조표입니다. 적합 수치를 입력하십시오.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="resetChecklist()" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm hover:bg-slate-700 transition">
+                        <i class="fa-solid fa-arrow-rotate-left"></i> 서식 비우기
+                    </button>
+                    <button onclick="generateReport()" class="bg-yellow-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm hover:bg-yellow-400 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-pdf"></i> 가설안전 점검표 출력/저장
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Checklist Table Section -->
+                <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col gap-4">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                        <h3 class="font-bold text-lg text-yellow-500"><i class="fa-solid fa-check-double"></i> KDS 기준 현장 실측 검사</h3>
+                        <div class="text-xs bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-full">
+                            완료 진척도: <span id="chk-progress" class="text-yellow-500 font-bold">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress bar -->
+                    <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+                        <div id="chk-progress-bar" class="bg-yellow-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+
+                    <!-- Interactive Form Items -->
+                    <div class="space-y-4 mt-2">
+                        <!-- Item 1 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">도면 및 구조일치</span>
+                                <h4 class="text-sm font-semibold text-slate-100">1. 가설공사 착수 전 기술사 검토를 거친 거푸집 동바리 조립도가 비치되어 있는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-1" placeholder="도면 승인일 (예: 2026.07.07)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-1" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">도면 및 구조일치</span>
+                                <h4 class="text-sm font-semibold text-slate-100">2. 현장 동바리 설치 중심선 간격(X, Y축)을 무작위 줄자 실측 시 조립도 설계값과 부합하는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-2" placeholder="실측 간격(예: 900mm)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-2" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">도면 및 구조일치</span>
+                                <h4 class="text-sm font-semibold text-slate-100">3. 가설 데크플레이트 거푸집 단부가 단부 최소 걸침 길이 설계 규정(최소 50mm) 이상 보 플랜지에 걸려있는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-3" placeholder="실측 걸침 (예: 55mm)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-3" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">수평 연결재</span>
+                                <h4 class="text-sm font-semibold text-slate-100">4. 높이 3.5m 초과 동바리 설치 시, 높이 2m 이내마다 양방향(직교)으로 수평 연결재를 긴밀히 조였는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-4" placeholder="설치 단수 (예: 2단)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-4" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 5 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">교차가새 보강</span>
+                                <h4 class="text-sm font-semibold text-slate-100">5. 횡좌굴 및 전단 변형 방지를 위하여 경사 가새(Bracing) 및 가설 조임핀 클램프가 견고히 잠겨 있는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-5" placeholder="클램프 상태 (예: 양호)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-5" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 6 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">지반 및 침하</span>
+                                <h4 class="text-sm font-semibold text-slate-100">6. 맨 하단 잭베이스 아래 연약지반 침하방지를 위해 두께 45mm 이상의 견고한 깔목 · 깔판을 설치했는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-6" placeholder="지반 등급 (예: 양호)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-6" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 7 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">존치 기한 준수</span>
+                                <h4 class="text-sm font-semibold text-slate-100">7. 당해 타설 층 슬래브 자중 분산을 위해 직하부 3개 층의 가설 동바리가 누락없이 완벽히 존치 유지되고 있는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-7" placeholder="존치 층수 (예: 3개층 전부)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-7" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+
+                        <!-- Item 8 -->
+                        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-slate-700 transition">
+                            <div class="flex-1 space-y-1">
+                                <span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase">해체 강도 검증</span>
+                                <h4 class="text-sm font-semibold text-slate-100">8. 거푸집 조기 해체 전, 당해 구간 콘크리트 압축 강도가 설계 규정 성능(예: 14MPa 이상)에 부합하는지 인증했는가?</h4>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <input type="text" id="chk-input-8" placeholder="시험 압축강도 (예: 15.2MPa)" class="bg-slate-900 border border-slate-800 rounded px-3 py-1 text-xs text-slate-300 w-44 focus:border-yellow-500 outline-none">
+                                <input type="checkbox" id="chk-box-8" onchange="calcProgress()" class="w-5 h-5 accent-yellow-500 cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sign-off & Reporting Section -->
+                <div class="space-y-6">
+                    <!-- Project metadata form -->
+                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                        <h3 class="font-bold text-sm text-slate-300 uppercase tracking-wider border-b border-slate-800 pb-3">공사현장 메타데이터 입력</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs font-semibold text-slate-400 block mb-1">공사 명</label>
+                                <input type="text" id="meta-project-name" value="남양주 삼패동 복합물류센터 신축공사" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-300 outline-none focus:border-yellow-500">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-400 block mb-1">점검 구역 및 층수</label>
+                                <input type="text" id="meta-project-zone" value="지상 3층 물류창고 A구역 슬래브" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-300 outline-none focus:border-yellow-500">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-400 block mb-1">현장 안전 총괄 책임자</label>
+                                <input type="text" id="meta-inspector" value="김안전 소장" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-sm text-slate-300 outline-none focus:border-yellow-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Signature Pad -->
+                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                            <h3 class="font-bold text-sm text-slate-300 uppercase tracking-wider">안전점검 승인 서명</h3>
+                            <button onclick="clearSignature()" class="text-xs text-red-400 hover:underline">서명 초기화</button>
+                        </div>
+                        <p class="text-xs text-slate-400">마우스 드래그 혹은 모바일 화면 터치로 본인 책임 서명을 직접 기입해 주십시오.</p>
+                        
+                        <div class="relative w-full aspect-[2/1] bg-slate-950 border border-slate-800 rounded-xl overflow-hidden">
+                            <canvas id="sig-canvas" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: TECHNICAL CALCULATOR -->
+        <section id="view-calculator" class="tab-view flex flex-col gap-6 hidden">
+            <div>
+                <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fa-solid fa-calculator text-yellow-500"></i> KDS 21 50 00 가설 하중 보강 계산기</h2>
+                <p class="text-sm text-slate-400">설치할 동바리 높이와 구조 형식을 입력하여 법적 기준 및 권장 가새 사양을 설계하세요.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Inputs -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-5">
+                    <h3 class="font-bold border-b border-slate-800 pb-3 text-sm text-slate-300 uppercase tracking-wider">구조물 기하 정보 입력</h3>
+                    
+                    <div>
+                        <label class="text-sm font-semibold text-slate-300 block mb-2">동바리(가설 기둥) 형식</label>
+                        <select id="calc-type" onchange="runCalculator()" class="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-lg text-sm text-slate-300 outline-none focus:border-yellow-500">
+                            <option value="pipe">단품 파이프 서포트 (V1 ~ V4)</option>
+                            <option value="system">시스템 동바리 (특수제작 결합식)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-300 block mb-2">동바리 전장 조립 높이 (m)</label>
+                        <input type="number" id="calc-height" value="4.2" min="1.0" max="10.0" step="0.1" oninput="runCalculator()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 outline-none focus:border-yellow-500">
+                        <p class="text-[11px] text-slate-500 mt-1">3.5m 초과 설치 시 KDS 건설코드로 정교한 수평 연결 보강 사양이 정의됩니다.</p>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-semibold text-slate-300 block mb-2">타설할 슬래브 두께 (mm)</label>
+                        <input type="number" id="calc-thick" value="250" min="50" max="1000" step="10" oninput="runCalculator()" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 outline-none focus:border-yellow-500">
+                    </div>
+                </div>
+
+                <!-- Technical Output Result -->
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold border-b border-slate-800 pb-3 text-sm text-slate-300 uppercase tracking-wider mb-4">공학적 보강 설계 가이드라인</h3>
+                        
+                        <div class="space-y-4">
+                            <!-- Bracing rule -->
+                            <div class="flex items-start gap-3 p-3.5 bg-slate-950 rounded-xl border border-slate-800">
+                                <div id="calc-status-icon" class="text-yellow-500 text-lg mt-0.5"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase">수평연결재 설치 법적 요건</h4>
+                                    <p id="calc-law-text" class="text-sm font-bold text-slate-100 mt-0.5">3.5m를 초과하므로 <strong>수평연결재 설치 필수 대상</strong>입니다.</p>
+                                </div>
+                            </div>
+
+                            <!-- Bracing placement detail -->
+                            <div class="flex items-start gap-3 p-3.5 bg-slate-950 rounded-xl border border-slate-800">
+                                <div class="text-blue-400 text-lg mt-0.5"><i class="fa-solid fa-layer-group"></i></div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase">최소 권장 단수 및 설치 간격</h4>
+                                    <p id="calc-steps-text" class="text-sm font-bold text-slate-100 mt-0.5">최소 2단 수평 연결재를 양방향(직교) 배치하십시오.</p>
+                                    <p id="calc-steps-detail" class="text-xs text-slate-500 mt-1">지면으로부터 2.0m 마다 한 단씩(약 1.5m ~ 2.0m 높이, 3.5m ~ 4.0m 높이 부근)에 강관으로 조여 주어야 좌굴을 방지합니다.</p>
+                                </div>
+                            </div>
+
+                            <!-- Slab Load analysis -->
+                            <div class="flex items-start gap-3 p-3.5 bg-slate-950 rounded-xl border border-slate-800">
+                                <div class="text-emerald-400 text-lg mt-0.5"><i class="fa-solid fa-weight-hanging"></i></div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-400 uppercase">예상 단위중량 및 수직 지반 작용력</h4>
+                                    <p id="calc-weight-text" class="text-sm font-bold text-slate-100 mt-0.5">슬래브 단위중량: 6.0 kN/m² (자중 포함)</p>
+                                    <p id="calc-weight-detail" class="text-xs text-slate-500 mt-1">이 가설 하중을 완벽히 소화하려면 지반의 설계 허용지지력은 15 kN/m² 이상 확보하고 두께 45mm 깔판으로 기저압을 확산시켜야 합니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-500/10 border border-yellow-500/20 p-3.5 rounded-xl text-xs text-yellow-400 mt-4">
+                        <i class="fa-solid fa-shield"></i> <strong>엔지니어링 코멘트:</strong> 본 간이 계산기는 표준 KDS 건설기준코드 수치를 기반으로 하며, 특수 비대칭 슬래브 및 경사 램프 구간 시공 시에는 건축구조기술사의 엄격한 3차원 유한요소 입체 구조계산서를 기준으로 삼아야 합니다.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Printable Document Template -->
+<section class="print-only hidden p-12 max-w-4xl mx-auto text-black bg-white">
+    <div class="text-center border-b-4 border-black pb-6 mb-8">
+        <h1 class="text-3xl font-black tracking-tight">[현장 가설공사] 거푸집 · 동바리 안전 점검 승인 가이드 보고서</h1>
+        <p class="text-sm mt-2 text-gray-600">본 보고서는 KDS 21 50 00 가설공사 기준 및 산업안전보건법에 근거해 작성된 현장 실측 가이드입니다.</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-6 mb-8 text-sm">
+        <div class="space-y-1">
+            <p><strong>공사 현장명:</strong> <span id="p-meta-project">남양주 삼패동 복합물류센터 신축공사</span></p>
+            <p><strong>점검 대상 구역:</strong> <span id="p-meta-zone">지상 3층 물류창고 A구역 슬래브</span></p>
+        </div>
+        <div class="space-y-1 text-right">
+            <p><strong>안전 총괄 책임자:</strong> <span id="p-meta-inspector">김안전 소장</span></p>
+            <p><strong>점검 및 서명 일자:</strong> <span id="p-meta-date">2026.07.07</span></p>
+        </div>
+    </div>
+
+    <h2 class="text-xl font-bold border-b-2 border-gray-800 pb-2 mb-4">■ 타설 전 필수 자가 안전 검사 기록</h2>
+    <table class="w-full border-collapse border border-gray-400 text-xs mb-8">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border border-gray-400 p-2 text-left w-12">번호</th>
+                <th class="border border-gray-400 p-2 text-left">점검 핵심 항목</th>
+                <th class="border border-gray-400 p-2 text-center w-20">실측값</th>
+                <th class="border border-gray-400 p-2 text-center w-16">적합여부</th>
+            </tr>
+        </thead>
+        <tbody id="print-checklist-body">
+            <!-- Dynamically populated via JS -->
+        </tbody>
+    </table>
+
+    <div class="flex justify-between items-end mt-12 pt-8 border-t border-gray-300">
+        <div class="text-xs text-gray-500">
+            <p>* 본 문서는 타설 승인 전 최종 대조용이며, 현장 영구 보존 서류 파일철에 바인딩 하십시오.</p>
+            <p>* 가설구조물 붕괴 예방은 현장의 생명과 존엄을 보장하는 첫 단추입니다.</p>
+        </div>
+        <div class="text-center w-48 space-y-2">
+            <p class="text-xs font-bold">현장 점검 관리인 확인 (서명)</p>
+            <div class="w-full h-20 border border-gray-300 rounded flex items-center justify-center relative overflow-hidden bg-gray-50">
+                <img id="print-sig-img" class="max-w-full max-h-full object-contain" alt="Signature">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-950 border-t border-slate-900 py-6 px-6 text-center text-xs text-slate-500 no-print">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <p>© 2026 스마트 가설안전 엔지니어링 시스템. All Rights Reserved.</p>
+        <p class="flex items-center gap-2">
+            <span class="bg-slate-900 px-2.5 py-1 rounded text-slate-400">참조: 국토교통부 건설공사 표준지침</span>
+            <span class="bg-slate-900 px-2.5 py-1 rounded text-slate-400">안전보건공단 가이드</span>
+        </p>
+    </div>
+</footer>
+
+<script>
+    // System State Variables
+    let activeTab = 'dashboard';
+    
+    // Live Timer Update
+    function updateLiveTimer() {
+        const timerElem = document.getElementById('live-timer');
+        if (timerElem) {
+            const now = new Date();
+            const formattedDate = now.getFullYear() + '년 ' + 
+                                  String(now.getMonth() + 1).padStart(2, '0') + '월 ' + 
+                                  String(now.getDate()).padStart(2, '0') + '일 ' + 
+                                  String(now.getHours()).padStart(2, '0') + '시 ' + 
+                                  String(now.getMinutes()).padStart(2, '0') + '분 ' + 
+                                  String(now.getSeconds()).padStart(2, '0') + '초';
+            timerElem.innerHTML = `<i class="fa-regular fa-clock"></i> 실시간 점검 시각: ${formattedDate}`;
+        }
+    }
+    setInterval(updateLiveTimer, 1000);
+    updateLiveTimer();
+
+    // Tab Switching Logic
+    function switchTab(tabId) {
+        activeTab = tabId;
+        
+        // Toggle tab sections
+        document.querySelectorAll('.tab-view').forEach(view => {
+            view.classList.add('hidden');
+        });
+        document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+        // Toggle buttons active classes
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.className = 'tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold text-slate-300 transition-all hover:bg-slate-800 hover:text-white';
+        });
+
+        const activeBtn = document.getElementById(`btn-${tabId}`);
+        if (activeBtn) {
+            activeBtn.className = 'tab-btn flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-semibold transition-all bg-yellow-500 text-slate-950 hover:bg-yellow-400';
+        }
+
+        // Specific view initialization triggers
+        if (tabId === 'simulator') {
+            initSimulator();
+        } else if (tabId === 'checklist') {
+            initSignaturePad();
+        } else if (tabId === 'calculator') {
+            runCalculator();
+        }
+    }
+
+    // Physics Simulator Engine Variables
+    let canvas, ctx;
+    let isPouring = false;
+    let concreteHeight = 0; // 0 to 100
+    let hasBracing = false;
+    let groundCondition = 'weak'; // 'weak' or 'solid'
+    let currentLoad = 20; // 0 to 100 slider value
+    let animationFrameId;
+    
+    // Physics metrics
+    let bendOffset = 0;
+    let vibrationScale = 0;
+    let structureState = 'safe'; // 'safe', 'warning', 'collapse'
+
+    function initSimulator() {
+        canvas = document.getElementById('simCanvas');
+        if (!canvas) return;
+        ctx = canvas.getContext('2d');
+
+        // Fit canvas to container size
+        const container = canvas.parentElement;
+        canvas.width = container.clientWidth;
+        canvas.height = container.clientHeight;
+
+        // Reset variables
+        concreteHeight = currentLoad / 20; 
+        
+        // Start rendering loop if not already running
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        
+        function renderLoop() {
+            updatePhysics();
+            drawSimulator();
+            animationFrameId = requestAnimationFrame(renderLoop);
+        }
+        renderLoop();
+    }
+
+    // Toggle pouring status
+    function togglePouring() {
+        isPouring = !isPouring;
+        const btn = document.getElementById('btn-pour');
+        if (isPouring) {
+            btn.innerHTML = '<i class="fa-solid fa-pause"></i> 일시 정지';
+            btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-400');
+            btn.classList.add('bg-blue-600', 'hover:bg-blue-500', 'text-white');
+        } else {
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> 타설 진행';
+            btn.classList.add('bg-yellow-500', 'hover:bg-yellow-400');
+            btn.classList.remove('bg-blue-600', 'hover:bg-blue-500', 'text-white');
+        }
+    }
+
+    function resetSimulation() {
+        isPouring = false;
+        concreteHeight = 20;
+        currentLoad = 20;
+        document.getElementById('slider-load').value = 20;
+        document.getElementById('val-load').innerText = "20% (가벼움)";
+        hasBracing = false;
+        groundCondition = 'weak';
+        document.getElementById('select-ground').value = 'weak';
+        
+        // Reset buttons styling
+        setBracing(false);
+        updateGround();
+
+        const btn = document.getElementById('btn-pour');
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> 타설 진행';
+        btn.className = 'bg-yellow-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm hover:bg-yellow-400 transition';
+        
+        structureState = 'safe';
+        bendOffset = 0;
+        vibrationScale = 0;
+    }
+
+    function setBracing(status) {
+        hasBracing = status;
+        const btnOn = document.getElementById('btn-bracing-on');
+        const btnOff = document.getElementById('btn-bracing-off');
+        const badge = document.getElementById('bracing-badge');
+
+        if (hasBracing) {
+            btnOn.className = "flex-1 py-2 rounded-lg text-xs font-bold transition border border-emerald-500 bg-emerald-500/20 text-emerald-400";
+            btnOff.className = "flex-1 py-2 rounded-lg text-xs font-bold transition border border-slate-700 bg-slate-950 text-slate-400 hover:border-red-500";
+            badge.innerText = "조립 완료 (안전)";
+            badge.className = "text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold";
+        } else {
+            btnOff.className = "flex-1 py-2 rounded-lg text-xs font-bold transition border border-red-500 bg-red-500/20 text-red-400";
+            btnOn.className = "flex-1 py-2 rounded-lg text-xs font-bold transition border border-slate-700 bg-slate-950 text-slate-400 hover:border-emerald-500";
+            badge.innerText = "미설치 (위험)";
+            badge.className = "text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold";
+        }
+    }
+
+    function updateGround() {
+        const select = document.getElementById('select-ground');
+        groundCondition = select.value;
+        const badge = document.getElementById('ground-badge');
+        
+        if (groundCondition === 'solid') {
+            badge.innerText = "견고한 암반/다짐 완료";
+            badge.className = "text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold";
+        } else {
+            badge.innerText = "연약 지반 (위험)";
+            badge.className = "text-xs bg-yellow-500/20 text-yellow-500 px-2 py-0.5 rounded font-bold";
+        }
+    }
+
+    function changeLoad(val) {
+        currentLoad = parseFloat(val);
+        const valText = document.getElementById('val-load');
+        if (currentLoad < 40) {
+            valText.innerText = `${currentLoad}% (가벼움)`;
+            valText.className = "text-emerald-400 font-bold";
+        } else if (currentLoad < 75) {
+            valText.innerText = `${currentLoad}% (보통 - 설계 하중)`;
+            valText.className = "text-yellow-400 font-bold";
+        } else {
+            valText.innerText = `${currentLoad}% (고중량 - 한계 하중)`;
+            valText.className = "text-red-500 font-bold";
+        }
+    }
+
+    function updatePhysics() {
+        if (isPouring) {
+            // slowly increase concrete pouring load
+            if (currentLoad < 100) {
+                currentLoad += 0.25;
+                document.getElementById('slider-load').value = Math.floor(currentLoad);
+                changeLoad(Math.floor(currentLoad));
+            } else {
+                isPouring = false;
+                const btn = document.getElementById('btn-pour');
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> 타설 진행';
+                btn.className = 'bg-yellow-500 text-slate-950 font-bold px-4 py-2 rounded-lg text-sm hover:bg-yellow-400 transition';
+            }
+        }
+
+        // Collapse criteria logic
+        // If NO bracing: collapses at load > 50
+        // If ground is weak and load is high: uneven settlement occurs
+        let collapseThreshold = 100;
+        if (!hasBracing) {
+            collapseThreshold = 45; 
+        }
+        if (groundCondition === 'weak') {
+            collapseThreshold -= 15; // compound weakness
+        }
+
+        const simAlarm = document.getElementById('sim-alarm');
+        const feedbackCard = document.getElementById('sim-feedback-card');
+        const statusTxt = document.getElementById('sim-status-txt');
+        const descTxt = document.getElementById('sim-desc-txt');
+
+        if (currentLoad >= collapseThreshold) {
+            structureState = 'collapse';
+            vibrationScale = 0;
+            // Let bendOffset sink further
+            bendOffset = Math.min(bendOffset + 1.2, 50);
+            
+            simAlarm.style.opacity = '1';
+            feedbackCard.className = "bg-red-500/10 border border-red-500/20 p-3 rounded-lg text-xs animate-shake";
+            statusTxt.className = "font-bold text-red-500";
+            statusTxt.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 구조물 파단 및 연쇄 붕괴 참사!`;
+            
+            if (!hasBracing && groundCondition === 'weak') {
+                descTxt.innerHTML = `수평 연결재 누락에 의한 <b>국부 좌굴(Buckling)</b>에 연약 지반 잭베이스 부등침하가 가해지며 완전 붕괴를 초래하였습니다.`;
+            } else if (!hasBracing) {
+                descTxt.innerHTML = `동바리 기둥의 좌굴을 고정해 주는 <b>수평 가새가 결여</b>되어, 타설 수직 하중이 기둥 단면의 임계 하중을 넘자 횡방향 전단 파괴가 일어났습니다.`;
+            } else {
+                descTxt.innerHTML = `동바리 자체 결속력은 양호했으나, <b>하단 다짐 및 깔목 시공 부재</b>로 슬래브 편심 가중이 발생하며 지반이 가라앉아 불균형 붕괴가 일어났습니다.`;
+            }
+        } else if (currentLoad >= collapseThreshold * 0.7) {
+            structureState = 'warning';
+            vibrationScale = (currentLoad / collapseThreshold) * 1.5;
+            bendOffset = Math.sin(Date.now() / 150) * vibrationScale * 1.5;
+            
+            simAlarm.style.opacity = '0.3';
+            feedbackCard.className = "bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg text-xs";
+            statusTxt.className = "font-bold text-yellow-500 animate-pulse";
+            statusTxt.innerHTML = `<i class="fa-solid fa-triangle-exclamation animate-bounce"></i> 붕괴 임계 도달! 위험 감지`;
+            descTxt.innerHTML = `현재 가설물이 비정상적인 유동 및 구조적 소성 변형에 처했습니다. 당장 타설을 중단하고 수평 연결 강선을 긴급 보완하십시오!`;
+        } else {
+            structureState = 'safe';
+            vibrationScale = 0.2;
+            bendOffset = 0;
+            
+            simAlarm.style.opacity = '0';
+            feedbackCard.className = "bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-lg text-xs";
+            statusTxt.className = "font-bold text-emerald-400";
+            statusTxt.innerHTML = `<i class="fa-solid fa-circle-check"></i> 구조 안전 상태 (KDS 기준 통과)`;
+            descTxt.innerHTML = `수치 및 자재 조립 규칙을 완벽히 지키고 있습니다. 타설 하중이 동바리 축방향 지지력 한도 범위 내에 안정적으로 분포되어 있습니다.`;
+        }
+    }
+
+    function drawSimulator() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Dimensions setup
+        const w = canvas.width;
+        const h = canvas.height;
+        const groundY = h - 60;
+        const slabY = 80;
+        const shoreHeight = groundY - slabY;
+
+        // 1. Draw Ground Level
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(0, groundY, w, 60);
+        ctx.strokeStyle = '#374151';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, groundY);
+        ctx.lineTo(w, groundY);
+        ctx.stroke();
+
+        // 2. Draw Geotechnical soil hatches if weak
+        if (groundCondition === 'weak') {
+            ctx.fillStyle = 'rgba(239, 68, 68, 0.05)';
+            ctx.fillRect(0, groundY, w, 60);
+            ctx.fillStyle = '#EF4444';
+            ctx.font = '10px monospace';
+            ctx.fillText("⚠️ 연약 지반 (다짐 불량 / 잭베이스 침하 유발)", 20, groundY + 35);
+        } else {
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.05)';
+            ctx.fillRect(0, groundY, w, 60);
+            ctx.fillStyle = '#10B981';
+            ctx.font = '10px sans-serif';
+            ctx.fillText("✔️ 견고 다짐 지반 (깔판 완비)", 20, groundY + 35);
+        }
+
+        // 3. Draw vertical scaffolding (shores / 동바리)
+        const columnsCount = 4;
+        const colSpacing = w / (columnsCount + 1);
+
+        // Calculate settlement tilt
+        let leftSettlement = 0;
+        let rightSettlement = 0;
+        if (groundCondition === 'weak' && structureState === 'collapse') {
+            leftSettlement = 40; 
+        }
+
+        for (let i = 0; i < columnsCount; i++) {
+            const defaultX = colSpacing * (i + 1);
+            let colSettlement = leftSettlement * (1 - i / (columnsCount - 1));
+            
+            // Draw Scaffolding Jack Base (하부 받침철물)
+            ctx.fillStyle = '#9CA3AF';
+            if (groundCondition === 'solid') {
+                // Drawing thick wooden sill board (깔목/깔판)
+                ctx.fillStyle = '#854D0E'; // brown wood
+                ctx.fillRect(defaultX - 35, groundY - 12, 70, 12);
+                ctx.fillStyle = '#D1D5DB';
+            }
+            ctx.fillRect(defaultX - 20, groundY - colSettlement - 4, 40, 4);
+
+            // Shore centerline with buckling deformation
+            ctx.beginPath();
+            ctx.strokeStyle = (structureState === 'collapse') ? '#EF4444' : 
+                              (structureState === 'warning') ? '#F59E0B' : '#E5E7EB';
+            ctx.lineWidth = 6;
+
+            const startX = defaultX;
+            const startY = groundY - colSettlement - 4;
+            const endX = defaultX;
+            const endY = slabY + (structureState === 'collapse' ? 25 : 0);
+
+            if (structureState === 'collapse') {
+                // Buckled structural column path
+                ctx.moveTo(startX, startY);
+                // sine curve buckling shape
+                const midY = (startY + endY) / 2;
+                const offsetDirection = (i % 2 === 0) ? 1 : -1;
+                ctx.quadraticCurveTo(startX + (bendOffset * 1.5 * offsetDirection), midY, endX, endY);
+            } else if (structureState === 'warning') {
+                ctx.moveTo(startX, startY);
+                const midY = (startY + endY) / 2;
+                ctx.quadraticCurveTo(startX + bendOffset, midY, endX, endY);
+            } else {
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+            }
+            ctx.stroke();
+
+            // Joints
+            ctx.fillStyle = '#6B7280';
+            ctx.beginPath();
+            ctx.arc(startX, endY + 4, 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // 4. Draw horizontal bracing elements (수평 연결재)
+        if (hasBracing) {
+            ctx.strokeStyle = '#3B82F6';
+            ctx.lineWidth = 4;
+            
+            // Draw 2 levels of horizontal connections
+            const heights = [0.35, 0.7]; // percentage of shore height
+            heights.forEach(factor => {
+                const hY = groundY - (shoreHeight * factor);
+                ctx.beginPath();
+                ctx.moveTo(colSpacing - 20, hY);
+                ctx.lineTo(colSpacing * columnsCount + 20, hY);
+                ctx.stroke();
+
+                // Draw connector clamps (연결핀/클램프)
+                ctx.fillStyle = '#F59E0B';
+                for (let i = 0; i < columnsCount; i++) {
+                    ctx.beginPath();
+                    ctx.arc(colSpacing * (i + 1), hY, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Draw diagonal Bracing (사선 가새)
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(colSpacing, groundY - 10);
+            ctx.lineTo(colSpacing * columnsCount, groundY - (shoreHeight * 0.95));
+            ctx.stroke();
+        }
+
+        // 5. Draw Top Slab and Concrete Pouring (상부 슬래브 및 콘크리트 타설)
+        const slabBaseY = slabY + (structureState === 'collapse' ? 25 : 0);
+        ctx.fillStyle = '#4B5563'; // Scaffolding Formwork structure (거푸집 목재)
+        ctx.fillRect(colSpacing - 30, slabBaseY - 12, (colSpacing * (columnsCount - 1)) + 60, 12);
+
+        // Drawing poured concrete on top
+        const pouredHeight = (currentLoad / 100) * 45;
+        if (pouredHeight > 1) {
+            ctx.fillStyle = 'rgba(107, 114, 128, 0.85)'; // Fresh Concrete gray
+            ctx.fillRect(colSpacing - 30, slabBaseY - 12 - pouredHeight, (colSpacing * (columnsCount - 1)) + 60, pouredHeight);
+            
+            // Top concrete texture line
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(colSpacing - 30, slabBaseY - 12 - pouredHeight);
+            ctx.lineTo(colSpacing * columnsCount + 30, slabBaseY - 12 - pouredHeight);
+            ctx.stroke();
+        }
+
+        // 6. Draw concrete pouring nozzle animation if pouring active
+        if (isPouring) {
+            const nozzleX = w / 2 + Math.sin(Date.now() / 300) * (w / 4);
+            // Nozzle pipe
+            ctx.strokeStyle = '#EF4444';
+            ctx.lineWidth = 14;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(w / 2, 0);
+            ctx.lineTo(nozzleX, 40);
+            ctx.stroke();
+
+            // Poured slurry stream
+            ctx.strokeStyle = '#9CA3AF';
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(nozzleX, 40);
+            ctx.lineTo(nozzleX, slabBaseY - 12 - pouredHeight);
+            ctx.stroke();
+        }
+
+        // 7. Status HUD Overlay Text
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 16px sans-serif';
+        if (structureState === 'collapse') {
+            ctx.fillStyle = '#EF4444';
+            ctx.fillText("🚨 붕괴 발생! (구조 한계 파단)", 20, 40);
+        } else if (structureState === 'warning') {
+            ctx.fillStyle = '#F59E0B';
+            ctx.fillText("⚠️ 과부하 위험 수준 도달", 20, 40);
+        } else {
+            ctx.fillStyle = '#10B981';
+            ctx.fillText("✔️ 가설 구조 상태 안정", 20, 40);
+        }
+    }
+
+    // Interactive Trigger from Case Study cards
+    function loadCaseIntoSim(caseKey) {
+        resetSimulation();
+        switchTab('simulator');
+
+        if (caseKey === 'case1') {
+            // 용인 교량: No bracing, 75% load -> buckles
+            setBracing(false);
+            updateGround();
+            changeLoad(75);
+            currentLoad = 75;
+            document.getElementById('slider-load').value = 75;
+            document.getElementById('select-ground').value = 'solid';
+        } else if (caseKey === 'case2') {
+            // 광주 아파트: No bracing (removed), 100% load -> total collapse
+            setBracing(false);
+            updateGround();
+            changeLoad(100);
+            currentLoad = 100;
+            document.getElementById('slider-load').value = 100;
+            document.getElementById('select-ground').value = 'solid';
+        } else if (caseKey === 'case3') {
+            // 안성 물류: No bracing, weak ground, 90% load -> compound failure
+            setBracing(false);
+            groundCondition = 'weak';
+            document.getElementById('select-ground').value = 'weak';
+            updateGround();
+            changeLoad(90);
+            currentLoad = 90;
+            document.getElementById('slider-load').value = 90;
+        }
+    }
+
+    // Checklist State
+    const totalChecklistItems = 8;
+    
+    function calcProgress() {
+        let checkedCount = 0;
+        for (let i = 1; i <= totalChecklistItems; i++) {
+            const chkBox = document.getElementById(`chk-box-${i}`);
+            if (chkBox && chkBox.checked) {
+                checkedCount++;
+            }
+        }
+        
+        const progressPercentage = Math.floor((checkedCount / totalChecklistItems) * 100);
+        
+        // Update UI Progress
+        document.getElementById('chk-progress').innerText = `${progressPercentage}%`;
+        document.getElementById('chk-progress-bar').style.width = `${progressPercentage}%`;
+        
+        // Update Dashboard Summary status text
+        const dashBadge = document.getElementById('chk-status-horizontal');
+        if (dashBadge) {
+            if (progressPercentage === 100) {
+                dashBadge.className = "bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded text-xs font-semibold";
+                dashBadge.innerHTML = `<i class="fa-solid fa-check"></i> 100% 점검 완료`;
+            } else {
+                dashBadge.className = "bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-semibold";
+                dashBadge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 점검 중 (${progressPercentage}%)`;
+            }
+        }
+    }
+
+    function resetChecklist() {
+        for (let i = 1; i <= totalChecklistItems; i++) {
+            const chkBox = document.getElementById(`chk-box-${i}`);
+            const chkInput = document.getElementById(`chk-input-${i}`);
+            if (chkBox) chkBox.checked = false;
+            if (chkInput) chkInput.value = '';
+        }
+        clearSignature();
+        calcProgress();
+    }
+
+    // Signature Pad Core
+    let sigCanvas, sigCtx;
+    let isDrawing = false;
+
+    function initSignaturePad() {
+        sigCanvas = document.getElementById('sig-canvas');
+        if (!sigCanvas) return;
+        sigCtx = sigCanvas.getContext('2d');
+
+        // Fit dimensions to wrapper
+        const rect = sigCanvas.parentElement.getBoundingClientRect();
+        sigCanvas.width = rect.width;
+        sigCanvas.height = rect.height;
+
+        sigCtx.strokeStyle = '#FFFFFF';
+        sigCtx.lineWidth = 3;
+        sigCtx.lineCap = 'round';
+
+        // Mouse drawing listeners
+        sigCanvas.addEventListener('mousedown', startDraw);
+        sigCanvas.addEventListener('mousemove', draw);
+        sigCanvas.addEventListener('mouseup', endDraw);
+        sigCanvas.addEventListener('mouseleave', endDraw);
+
+        // Mobile touch drawing listeners
+        sigCanvas.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            sigCanvas.dispatchEvent(mouseEvent);
+        }, { passive: false });
+
+        sigCanvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            sigCanvas.dispatchEvent(mouseEvent);
+        }, { passive: false });
+
+        sigCanvas.addEventListener('touchend', function(e) {
+            const mouseEvent = new MouseEvent('mouseup', {});
+            sigCanvas.dispatchEvent(mouseEvent);
+        }, { passive: false });
+    }
+
+    function getCanvasCoordinates(e) {
+        const rect = sigCanvas.getBoundingClientRect();
+        // Handle both desktop mouse & responsive viewport scaling
+        return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+
+    function startDraw(e) {
+        isDrawing = true;
+        const coords = getCanvasCoordinates(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(coords.x, coords.y);
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        const coords = getCanvasCoordinates(e);
+        sigCtx.lineTo(coords.x, coords.y);
+        sigCtx.stroke();
+    }
+
+    function endDraw() {
+        isDrawing = false;
+    }
+
+    function clearSignature() {
+        if (sigCtx && sigCanvas) {
+            sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        }
+    }
+
+    // Export & Print Safe Report Template
+    function generateReport() {
+        // 1. Map meta text to print layout
+        const projName = document.getElementById('meta-project-name').value || "미지정 공사 현장";
+        const projZone = document.getElementById('meta-project-zone').value || "미지정 관리구역";
+        const inspector = document.getElementById('meta-inspector').value || "안전관리 담당 책임자";
+        
+        document.getElementById('p-meta-project').innerText = projName;
+        document.getElementById('p-meta-zone').innerText = projZone;
+        document.getElementById('p-meta-inspector').innerText = inspector;
+
+        const now = new Date();
+        document.getElementById('p-meta-date').innerText = now.getFullYear() + '.' + String(now.getMonth() + 1).padStart(2,'0') + '.' + String(now.getDate()).padStart(2,'0');
+
+        // 2. Map signature image to printed image element
+        const sigImg = document.getElementById('print-sig-img');
+        if (sigCanvas) {
+            sigImg.src = sigCanvas.toDataURL();
+        }
+
+        // 3. Dynamically populate checklist rows in printable structure
+        const tbody = document.getElementById('print-checklist-body');
+        tbody.innerHTML = ''; // reset
+
+        const questions = [
+            "가설공사 착수 전 전문기술사 검증 조립도 승인본 현장 비치 여부",
+            "동바리 평면 배치 격자 간격 실규모 줄자 측정 일치성",
+            "데크플레이트 및 가설 거푸집 단부 최소 거치 한도(50mm 이상) 확보",
+            "동바리 3.5m 초과 시 수평연결재 2m 이내마다 양방향 체결 여부",
+            "가설 전단 변형 방지 경사가새 및 전용 핀 조임 볼트 밀착",
+            "잭베이스 하방 다짐 및 두께 45mm 이상 깔판·깔목 배치 상태",
+            "슬래브 분산 하중 지탱을 위한 하부 3개 층 동바리 존치 규정",
+            "임의 조기 해체 전 현장 콘크리트 압축 파괴 검사 합격 성적서"
+        ];
+
+        for (let i = 1; i <= totalChecklistItems; i++) {
+            const chkBox = document.getElementById(`chk-box-${i}`);
+            const chkInput = document.getElementById(`chk-input-${i}`);
+            
+            const isChecked = chkBox ? chkBox.checked : false;
+            const textVal = chkInput ? chkInput.value : "-";
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border border-gray-400 p-2 text-center font-bold">${i}</td>
+                <td class="border border-gray-400 p-2 font-medium">${questions[i-1]}</td>
+                <td class="border border-gray-400 p-2 text-center text-gray-700">${textVal || "기재 생략"}</td>
+                <td class="border border-gray-400 p-2 text-center font-bold ${isChecked ? 'text-green-600' : 'text-red-600'}">
+                    ${isChecked ? 'PASS' : 'FAIL'}
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        // 4. Trigger Native Print Interface
+        window.print();
+    }
+
+    function runCalculator() {
+        const type = document.getElementById('calc-type').value;
+        const height = parseFloat(document.getElementById('calc-height').value) || 0;
+        const thick = parseFloat(document.getElementById('calc-thick').value) || 0;
+
+        const statusIcon = document.getElementById('calc-status-icon');
+        const lawText = document.getElementById('calc-law-text');
+        const stepsText = document.getElementById('calc-steps-text');
+        const stepsDetail = document.getElementById('calc-steps-detail');
+        const weightText = document.getElementById('calc-weight-text');
+        const weightDetail = document.getElementById('calc-weight-detail');
+
+        // 1. Legal requirement based on Height
+        if (height <= 3.5) {
+            statusIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i>`;
+            lawText.innerHTML = `설치 높이 ${height}m는 파이프서포트 보강 경계선(3.5m) 이내이므로 단독 거치 기준 적용이 가능합니다.`;
+            stepsText.innerHTML = `수평 연결재 강제 의무화 대상 제외 (설계상 필요시 가새 보충 권장)`;
+            stepsDetail.innerHTML = `단, 높이 조절 나사선이 안전 한계 규격을 탈이탈하지 않도록 정기 체크를 권고합니다.`;
+        } else {
+            statusIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-yellow-500"></i>`;
+            lawText.innerHTML = `설치 높이 ${height}m는 <strong>수평 연결재 설치 법적 의무 부과 기준(3.5m 초과)</strong>에 해당합니다.`;
+            
+            // Calculate recommended brace levels (Every 2 meters)
+            const levelsCount = Math.floor(height / 2);
+            stepsText.innerHTML = `최소 ${levelsCount}개 단 높이마다 수평 연결재를 양방향에 조립하십시오.`;
+            
+            let heightsString = [];
+            for (let i = 1; i <= levelsCount; i++) {
+                heightsString.push(`${(i * 2).toFixed(1)}m 지점`);
+            }
+            stepsDetail.innerHTML = `조립도 작성 의무가 따르며, 지면으로부터 각각 <b>${heightsString.join(', ')}</b>에 전용 조인트 밴드로 수직재를 직교 연계해 횡단 꺾임을 완벽히 구속하십시오.`;
+        }
+
+        // 2. Concrete weight estimate
+        // Wet Concrete unit weight ~ 24 kN/m^3.
+        // Convert thick (mm) to meter, multiply by 24. Add working load margin (typically 2.5 kN/m^2)
+        const conWeight = (thick / 1000) * 24;
+        const totalDesignLoad = conWeight + 2.5; // adding construction load margin
+
+        weightText.innerHTML = `예상 설계 단위 면적 하중: <strong>${totalDesignLoad.toFixed(2)} kN/m²</strong>`;
+        
+        const reqSillArea = totalDesignLoad / 150; // Simple soil bearing guideline
+        weightDetail.innerHTML = `생콘크리트 단위 자중(${conWeight.toFixed(1)} kN/m²)에 작업 기계 다중 하중을 가산한 수치입니다. 하부 지반 지지력 검사(최소 안전 지지값: ${(totalDesignLoad * 2.5).toFixed(1)} kN/m²)가 선결 확인되어야 침하 사고를 방지합니다.`;
+    }
+
+    // Run dashboard initially
+    window.onload = function() {
+        switchTab('dashboard');
+    }
+</script>
+</body>
+</html>

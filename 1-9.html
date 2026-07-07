@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>건설안전 - 전기 및 설비공사</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .checklist-item.checked {
+            text-decoration: line-through;
+            color: #9ca3af; /* text-gray-400 */
+        }
+        .checklist-item.checked .custom-checkbox {
+            background-color: #10b981; /* bg-green-500 */
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white pt-16 pb-12 px-4 text-center shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <span class="bg-blue-700 text-blue-100 px-3 py-1 rounded-full text-sm font-semibold tracking-wider mb-4 inline-block">분야별 안전 가이드</span>
+            <h1 class="text-3xl md:text-5xl font-bold mb-4">전기 및 설비공사 안전관리</h1>
+            <p class="text-blue-200 text-lg md:text-xl max-w-2xl mx-auto">
+                보이지 않는 위험, 전광석화처럼 다가옵니다.<br>
+                철저한 관리와 예방으로 소중한 생명을 지킵니다.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
+
+        <!-- 1. 위험 요인 (Risk Factors) -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-2xl mr-4 shadow-sm">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">주요 위험 요인</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-yellow-400 hover:shadow-lg transition-shadow">
+                    <div class="text-yellow-500 text-3xl mb-4"><i class="fa-solid fa-plug-circle-xmark"></i></div>
+                    <h3 class="text-xl font-bold mb-3">손상된 전선 및 배전반 노출</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        건설 현장 특성상 장비에 밟히거나 자재에 긁혀 가설 전선의 피복이 벗겨지기 쉽습니다. 특히 우천 시 임시 배전반이 물에 노출되면 심각한 누전 위험이 발생합니다.
+                    </p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-yellow-400 hover:shadow-lg transition-shadow">
+                    <div class="text-yellow-500 text-3xl mb-4"><i class="fa-solid fa-fire"></i></div>
+                    <h3 class="text-xl font-bold mb-3">화기 작업 중 불티 비산</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        배관 용접 등 설비 작업 중 발생하는 고온의 불티가 비산하여 주변에 방치된 우레탄 폼 등 가연성 단열재에 옮겨붙으면 대형 화재로 직결될 수 있습니다.
+                    </p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-yellow-400 hover:shadow-lg transition-shadow">
+                    <div class="text-yellow-500 text-3xl mb-4"><i class="fa-solid fa-lungs-virus"></i></div>
+                    <h3 class="text-xl font-bold mb-3">밀폐공간 내 환기 불량</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        지하 물탱크, 좁은 기계실 등 환기가 어려운 밀폐공간에서 설비 작업을 할 경우, 유해가스가 체류하거나 산소가 결핍되어 질식 사고의 위험이 매우 높습니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 아차! 사고 사례 (Accident Cases) -->
+        <section class="bg-red-50 p-8 rounded-2xl border border-red-100">
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mr-4 shadow-sm">
+                    <i class="fa-solid fa-siren-on"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-red-800">아차! 주요 사고 사례</h2>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Case 1 -->
+                <div class="flex flex-col md:flex-row bg-white rounded-lg p-5 shadow-sm border-l-4 border-red-500">
+                    <div class="md:w-1/4 font-bold text-red-600 mb-2 md:mb-0 flex items-center">
+                        <i class="fa-solid fa-bolt mr-2"></i> [감전 사고]
+                    </div>
+                    <div class="md:w-3/4">
+                        <p class="text-slate-700">여름철 우천 직후, 작업자가 <strong>빗물에 젖은 목장갑</strong>을 낀 상태로 피복이 미세하게 손상된 전동 그라인더를 사용하다가 누전된 전류에 감전되어 사망한 사례.</p>
+                    </div>
+                </div>
+                <!-- Case 2 -->
+                <div class="flex flex-col md:flex-row bg-white rounded-lg p-5 shadow-sm border-l-4 border-red-500">
+                    <div class="md:w-1/4 font-bold text-red-600 mb-2 md:mb-0 flex items-center">
+                        <i class="fa-solid fa-fire-flame-curved mr-2"></i> [화재 사고]
+                    </div>
+                    <div class="md:w-3/4">
+                        <p class="text-slate-700">기계실 배관 용접 작업 중 <strong>발생한 불티가 하부에 방치되어 있던 가연성 단열재(우레탄 폼)에 튀면서</strong> 유독가스를 동반한 대형 화재로 이어진 사례.</p>
+                    </div>
+                </div>
+                <!-- Case 3 -->
+                <div class="flex flex-col md:flex-row bg-white rounded-lg p-5 shadow-sm border-l-4 border-red-500">
+                    <div class="md:w-1/4 font-bold text-red-600 mb-2 md:mb-0 flex items-center">
+                        <i class="fa-solid fa-mask-ventilator mr-2"></i> [질식 사고]
+                    </div>
+                    <div class="md:w-3/4">
+                        <p class="text-slate-700">환기 설비가 제대로 가동되지 않은 좁은 지하 피트(Pit)층에서 아르곤 가스를 이용해 배관 용접을 하던 중, <strong>내부 산소 농도가 급감하여 작업자가 질식</strong> 후 쓰러진 사례.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 안전 사항 체크리스트 (Safety Checklist) -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl mr-4 shadow-sm">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800">필수 안전 체크리스트</h2>
+            </div>
+            <p class="text-slate-500 mb-6 ml-2"><i class="fa-solid fa-circle-info mr-1"></i> 항목을 클릭하여 점검을 완료하세요.</p>
+
+            <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                <ul class="divide-y divide-slate-100" id="checklist">
+                    <!-- Check Item 1 -->
+                    <li class="cursor-pointer hover:bg-slate-50 transition-colors">
+                        <label class="flex items-center p-6 cursor-pointer checklist-item w-full">
+                            <input type="checkbox" class="hidden" onchange="toggleCheck(this)">
+                            <div class="custom-checkbox w-6 h-6 rounded border-2 border-slate-300 mr-4 flex items-center justify-center text-white transition-colors">
+                                <i class="fa-solid fa-check text-sm opacity-0 transition-opacity"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg mb-1">누전차단기 및 전선 피복 상태 점검</h4>
+                                <p class="text-sm">작업 투입 전, 임시 배전반의 누전차단기 정상 작동 여부를 테스트 코일로 확인하고 이동식 전선의 피복에 찢어진 곳이 없는지 육안으로 확인했습니까?</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Check Item 2 -->
+                    <li class="cursor-pointer hover:bg-slate-50 transition-colors">
+                        <label class="flex items-center p-6 cursor-pointer checklist-item w-full">
+                            <input type="checkbox" class="hidden" onchange="toggleCheck(this)">
+                            <div class="custom-checkbox w-6 h-6 rounded border-2 border-slate-300 mr-4 flex items-center justify-center text-white transition-colors">
+                                <i class="fa-solid fa-check text-sm opacity-0 transition-opacity"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg mb-1">화기 작업 구역 화재 예방 조치</h4>
+                                <p class="text-sm">용접 등 화기 작업을 진행하기 전, 작업 반경 11m 이내의 가연성 자재를 치우고 불티 비산 방지포와 소화기를 즉시 사용할 수 있는 위치에 비치했습니까?</p>
+                            </div>
+                        </label>
+                    </li>
+                    <!-- Check Item 3 -->
+                    <li class="cursor-pointer hover:bg-slate-50 transition-colors">
+                        <label class="flex items-center p-6 cursor-pointer checklist-item w-full">
+                            <input type="checkbox" class="hidden" onchange="toggleCheck(this)">
+                            <div class="custom-checkbox w-6 h-6 rounded border-2 border-slate-300 mr-4 flex items-center justify-center text-white transition-colors">
+                                <i class="fa-solid fa-check text-sm opacity-0 transition-opacity"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg mb-1">밀폐공간 유해가스 측정 및 환기</h4>
+                                <p class="text-sm">지하시설 및 밀폐공간에서 설비 작업을 시작하기 전, 반드시 산소 및 유해가스 농도를 측정하고 작업 중에도 지속적으로 급배기 환기 팬을 가동하고 있습니까?</p>
+                            </div>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-8 text-center mt-12">
+        <p>© 2024 건설안전 프로젝트 팀. All rights reserved.</p>
+        <p class="text-sm mt-2">담당 파트: 전기 및 설비공사 안전</p>
+    </footer>
+
+    <!-- Checklist Interaction Script -->
+    <script>
+        function toggleCheck(checkbox) {
+            const listItem = checkbox.closest('.checklist-item');
+            const checkIcon = listItem.querySelector('.fa-check');
+            
+            if (checkbox.checked) {
+                listItem.classList.add('checked');
+                checkIcon.classList.remove('opacity-0');
+            } else {
+                listItem.classList.remove('checked');
+                checkIcon.classList.add('opacity-0');
+            }
+        }
+    </script>
+</body>
+</html>

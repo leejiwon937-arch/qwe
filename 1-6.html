@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비계 작업 유형별 유해·위험요인 및 안전대책 체크리스트</title>
+    <style>
+        :root {
+            --primary-color: #1e293b;
+            --accent-color: #ea580c;
+            --danger-color: #dc2626;
+            --danger-bg: #fef2f2;
+            --case-color: #4b5563;
+            --case-bg: #f9fafb;
+            --success-color: #16a34a;
+            --success-bg: #f0fdf4;
+            --text-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-color);
+            line-height: 1.7;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--primary-color), #334155);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            color: #cbd5e1;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-header {
+            background-color: #f8fafc;
+            padding: 20px 25px;
+            border-bottom: 3px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .section-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .section-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 유해 위험 요인 스타일 */
+        .danger-box {
+            background-color: var(--danger-bg);
+            border-left: 5px solid var(--danger-color);
+        }
+        .danger-box .section-title {
+            color: var(--danger-color);
+        }
+
+        /* 실제 재해 사례 스타일 */
+        .case-box {
+            background-color: var(--case-bg);
+            border-left: 5px solid var(--case-color);
+        }
+        .case-box .section-title {
+            color: var(--case-color);
+        }
+        .case-meta {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #6b7280;
+            margin-bottom: 8px;
+            background: #e5e7eb;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .case-content {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        .case-reason span {
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        /* 안전대책 체크리스트 스타일 */
+        .checklist-box {
+            background-color: var(--success-bg);
+            border-left: 5px solid var(--success-color);
+        }
+        .checklist-box .section-title {
+            color: var(--success-color);
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        .danger-box li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+        }
+        .danger-box li::before {
+            content: "•";
+            color: var(--danger-color);
+            font-weight: bold;
+            position: absolute;
+            left: 5px;
+        }
+
+        /* 체크리스트 아이템 스타일 */
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+        }
+
+        .checklist-item:hover {
+            background-color: #e6fced;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 4px;
+            cursor: pointer;
+            accent-color: var(--success-color);
+        }
+
+        .checklist-text {
+            font-size: 1rem;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + .checklist-text {
+            text-decoration: line-through;
+            color: #86efac;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 1.6rem;
+            }
+            .card-header h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>비계 작업 유형별 안전 점검 가이드</h1>
+        <p>유해·위험요인을 확인하고 현장 작업 전 대책을 반드시 체크하세요.</p>
+    </header>
+
+    <!-- 1. 이동식 비계 및 말비계 작업 -->
+    <div class="card">
+        <div class="card-header">
+            <h2>1. 이동식 비계 및 말비계 작업</h2>
+        </div>
+        <div class="card-body">
+            <div class="section-box danger-box">
+                <div class="section-title">⚠ 유해·위험요인</div>
+                <ul>
+                    <li>이동식 비계 상부 작업 중 전도방지 지지대(아웃트리거) 미설치로 인한 구조물 흔들림 및 전도</li>
+                    <li>최상부 작업발판의 단부(끝부분) 안전난간 미설치로 인한 균형 상실 후 추락</li>
+                </ul>
+            </div>
+            
+            <div class="section-box case-box">
+                <div class="section-title">📉 실제 재해 사례</div>
+                <div class="case-meta">📍 강원 태백시 소재 옹벽 공사 현장 (2025년 6월 발생)</div>
+                <div class="case-content">
+                    <strong>사고 내용:</strong> 옹벽 공사 현장에서 근로자가 철근 배근 작업을 위해 이동식 비계 상부(높이 약 2.6m)에 올라가 작업하던 중, 중심을 잃고 바닥으로 추락하여 치료를 받다가 끝내 사망함.
+                </div>
+                <div class="case-reason">
+                    <strong>📢 사고 원인:</strong> 이동식 비계 최상부 단부에 추락을 막아줄 <span>안전난간이 제대로 설치되어 있지 않았으며</span>, 안전대 착용 및 걸이시설 체결 상태에 대한 <span>관리 감독이 불량</span>했음.
+                </div>
+            </div>
+
+            <div class="section-box checklist-box">
+                <div class="section-title">✅ 안전대책 체크리스트</div>
+                <div class="checklist-container">
+                    <label class="checklist-item">
+                        <input type="checkbox">
+                        <span class="checklist-text"><strong>안전난간 및 발끝막이판 설치:</strong> 이동식 비계 상부 작업발판 사방에 안전난간(상부 난간대 90~120cm, 중간 난간대) 및 발끝막이판이 확실히 설치되어 있는가?</span>
+                    </label>
+                    <label class="checklist-item">
+                        <input type="checkbox">
+                        <span class="checklist-text"><strong>아웃트리거 고정 및 브레이크 점검:</strong> 작업 전 바퀴 브레이크를 고정하고, 전도방지용 아웃트리거를 사방에 완전히 확장·고정하여 흔들림을 차단했는가?</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 시스템(강관) 비계 조립 및 해체 작업 -->
+    <div class="card">
+        <div class="card-header">
+            <h2>2. 시스템(강관) 비계 조립 및 해체 작업</h2>
+        </div>
+        <div class="card-body">
+            <div class="section-box danger-box">
+                <div class="section-title">⚠ 유해·위험요인</div>
+                <ul>
+                    <li>비계 해체 과정에서 작업 편의를 위해 고정 장치(안전난간, 벽이음 등)를 미리 해체하여 구조물 붕괴 및 작업자 추락</li>
+                    <li>상·하부 동시 작업으로 인한 해체 자재 낙하 및 추락 위험 발생</li>
+                </ul>
+            </div>
+            
+            <div class="section-box case-box">
+                <div class="section-title">📉 실제 재해 사례</div>
+                <div class="case-meta">📍 경기도 파주시 소재 신축 건설 현장 (2021년 4월 발생)</div>
+                <div class="case-content">
+                    <strong>사고 내용:</strong> 오전 7시경 외벽에 설치된 가설 시스템 비계를 해체하는 과정에서, 3단 상부 작업자로부터 해체된 작업발판을 건네받아 2단 발판에 서 있던 근로자가 하부 작업자에게 전달하려다 중심을 잃고 지면으로 추락하여 사망함.
+                </div>
+                <div class="case-reason">
+                    <strong>📢 사고 원인:</strong> 작업 능률을 위해 해체 구간의 <span>안전난간을 이미 선해체(미리 뜯어냄)해 둔 상태</span>였기 때문에, 작업자가 중심을 잃었을 때 붙잡거나 막아줄 지지대가 전혀 없었음.
+                </div>
+            </div>
+
+            <div class="section-box checklist-box">
+                <div class="section-title">✅ 안전대책 체크리스트</div>
+                <div class="checklist-container">
+                    <label class="checklist-item">
+                        <input type="checkbox">
+                        <span class="checklist-text"><strong>순차적 해체 및 선해체 금지:</strong> 비계 해체는 반드시 조립의 역순(상부부터 차례로)으로 진행하며, 안전난간이나 벽이음은 해당 단의 해체가 끝날 때까지 임의로 선해체하지 않았는가?</span>
+                    </label>
+                    <label class="checklist-item">
+                        <input type="checkbox">
+                        <span class="checklist-text"><strong>안전대 체결 및 관리감독:</strong> 작업 시작 전 안전대 부착설비(수직·수평 구명줄)를 설치하고, 근로자가 안전고리를 반드시 체결한 상태에서 이동·작업하도록 관리하고 있는가?</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 달비계 작업 -->
+    <div class="card">
+        <div class="card-header">
+            <h2>3. 달비계 작업 (외벽 도장 및 보수 가설재)</h2>
+        </div>
+        <div class="card-body">
+            <div class="section-box danger-box">
+                <div class="section-title">⚠ 유해·위험요인</div>
+                <ul>
+                    <li>건물 옥상 고정점(앵커) 결속 불량 또는 로프 풀림으로 인한 달비계 추락</li>
+                    <li>로프가 건물 모서리의 날카로운 부위에 쓸려 단선(끊어짐)되면서 추락</li>
+                </ul>
+            </div>
+            
+            <div class="section-box case-box">
+                <div class="section-title">📉 실제 재해 사례</div>
+                <div class="case-meta">📍 울산 중구 소재 아파트 외벽 도장 및 균열보수 공사 현장</div>
+                <div class="case-content">
+                    <strong>사고 내용:</strong> 일용직 근로자가 아파트 옥상에서 달비계(밧줄에 매달리는 의자형 가설재)를 타고 내려오며 외벽 균열 보수 작업을 하던 중, 메인 고정 로프가 풀리면서 달비계와 함께 바닥으로 추락하여 사망함. (이 사고로 현장 실질 대표에게 안전보건 조치 의무 위반으로 실형이 선고됨.)
+                </div>
+                <div class="case-reason">
+                    <strong>📢 사고 원인:</strong> 작업 전 로프의 부착 및 결속 상태 점검이 전혀 없었고, 결정적으로 주 로프가 끊어지거나 풀릴 때를 대비한 <span>'수직구명줄(추락방지대 연결용 독립 로프)'을 별도로 설치하지 않아</span> 기본 줄이 풀리자마자 바로 추락으로 이어짐.
+                </div>
+            </div>
+
+            <div class="section-box checklist-box">
+                <div class="section-title">✅ 안전대책 체크리스트</div>
+                <div class="checklist-container">
+                    <label class="checklist-item">
+                        <input type="checkbox">
+                        <span class="checklist-text"><strong>독립된 수직구명줄 설치:</strong> 작업용 주 로프와는 완전히 독립된 별도의 수직구명줄(안전대 체결용)을 내려 설치하고, 근로자가 추락방지대(수직구레코)를 체결했는가?</span>
+                    </label>
+                    <label class="checklist-item">
+                        <input type="checkbox">
+                        <span class="checklist-text"><strong>견고한 결속 및 마모 방지:</strong> 로프를 2개 이상의 견고한 옥상 고정점에 결속하고, 건물 난간 등 모서리와 접촉하는 부위에 로프 마모 방지용 패드(보호대)를 확실히 부착했는가?</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 건설안전 가이드라인. 모든 근로자의 안전한 퇴근을 기원합니다.</p>
+    </footer>
+</div>
+
+</body>
+</html>

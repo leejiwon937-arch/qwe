@@ -1,0 +1,1232 @@
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>철근공사 공학 안전 지식 허브</title>
+        <!-- Tailwind CSS CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            /* Custom scrollbar styling for technical feel */
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #090d16;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #1e293b;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #334155;
+            }
+        </style>
+    </head>
+    <body class="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-900">
+
+        <script>
+            // --- 한국 표준 이형철근 고유 데이터 (KS D 3504) ---
+            const REBAR_DATA = [
+                { name: 'D10', unitWeight: 0.560, diameter: 9.53, area: 71.33, color: 'bg-emerald-500' },
+                { name: 'D13', unitWeight: 0.995, diameter: 12.7, area: 126.7, color: 'bg-teal-500' },
+                { name: 'D16', unitWeight: 1.560, diameter: 15.9, area: 198.6, color: 'bg-cyan-500' },
+                { name: 'D19', unitWeight: 2.230, diameter: 19.1, area: 286.5, color: 'bg-sky-500' },
+                { name: 'D22', unitWeight: 3.040, diameter: 22.2, area: 387.1, color: 'bg-blue-500' },
+                { name: 'D25', unitWeight: 3.980, diameter: 25.4, area: 506.7, color: 'bg-indigo-500' },
+                { name: 'D29', unitWeight: 5.040, diameter: 28.6, area: 642.4, color: 'bg-violet-500' },
+                { name: 'D32', unitWeight: 6.230, diameter: 31.8, area: 794.2, color: 'bg-purple-500' },
+                { name: 'D35', unitWeight: 7.510, diameter: 34.9, area: 956.6, color: 'bg-pink-500' }
+            ];
+
+            // --- 8대 공정 핵심 공학 지식 데이터 (위험요인 + 사고사례 + 공정별 체크리스트 + 역학구조도 구성) ---
+            const PROCESS_STEPS_DATA = [
+                {
+                    step: '01',
+                    phase: '철근 자재 반입 및 양중 (크레인 작업)',
+                    subtitle: '크레인 양중 하중 분력 및 모멘트 제어',
+                    hazard: {
+                        title: '줄걸이 와이어로프의 인장 응력 편중 및 파단 위험',
+                        mechanics: '재료역학 / 인장 응력 (Tension Stress)',
+                        formula: 'T = W / (2 · cos(θ/2))',
+                        formulaDesc: '줄걸이 내각(θ)이 벌어질수록 와이어로프의 부담 하중(T)이 기하급수적으로 증폭됨.',
+                        desc: '철근 다발을 양중할 때 2줄 걸이의 내각이 60도를 초과하여 수평에 가깝게 벌어질수록, 로프에 가해지는 수평 분력이 커져 인장응력이 극한강도를 초과하여 순간적으로 파단될 위험이 매우 큽니다. 또한 무게중심을 빗겨난 부적절한 결속 시 편심 모멘트가 작동하여 다발이 미끄러져 추락(Slip)하게 됩니다.'
+                    },
+                    accident: {
+                        title: '양중 로프 장력 임계점 초과로 인한 낙하 붕괴 사고',
+                        caseDesc: '2024년 OO 아파트 신축 현장에서 타워크레인으로 3.2톤의 장대 철근 다발을 2줄 슬링으로 양중하던 중, 협소한 공간에서 무리하게 슬링 벨트의 내각을 110도로 넓혀 들다 장력 집중으로 로프가 단열 파단되었습니다. 낙하한 철근다발이 가설 외부 비계를 타격하여 구조물 전체가 붕괴되고 하부 신호수가 매몰되는 중대재해가 발생했습니다.'
+                    },
+                    checklist: [
+                        { id: 'step1-1', item: '줄걸이 와이어로프의 양중 내각을 60도 이하로 견고히 유지하고 있는가?' },
+                        { id: 'step1-2', item: '철근다발의 정밀한 무게중심(Center of Gravity)을 잡아 편심 모멘트를 억제했는가?' },
+                        { id: 'step1-3', item: '크레인 반경 내 작업자 출입 통제 휀스를 설치하고 전담 신호수를 고정 배치하였는가?' }
+                    ],
+                    svgType: 'crane'
+                },
+                {
+                    step: '02',
+                    phase: '철근 가공 (절단 및 절곡 작업)',
+                    subtitle: '에너지 비산 및 회전 토크 협착 방지',
+                    hazard: {
+                        title: '전단 파단 시 탄성 복원 에너지 방출에 의한 고속 비산 위험',
+                        mechanics: '재료역학 / 비틀림 토크 및 탄성 복원에너지',
+                        formula: 'U = (σ² / 2E) · V',
+                        formulaDesc: '축적된 탄성 변형 에너지(U)가 파단 시 운동에너지로 급격히 치환되며 비산.',
+                        desc: '절단기가 철근의 항복강도를 넘어 전단력을 가하는 찰나, 강재 내부에 누적되어 있던 탄성 복원 에너지가 충격음과 함께 방출되면서 절단부의 파편이나 철근 칩이 총탄과 같은 고속으로 사방 비산합니다. 벤더기(절곡기) 작동 시에는 거대한 회전 모멘트 반경 내에 근로자의 장갑이나 의복이 끼여 들어갈 경우 강한 기계적 토크에 의해 사지가 협착되는 기계적 메커니즘이 작동합니다.'
+                    },
+                    accident: {
+                        title: '절단 가공 중 탄성 에너지 방출에 의한 안면부 비산 충격 재해',
+                        caseDesc: 'OO 종합철근가공장 내에서 고강도 D25 철근을 기계식 절단기로 쪼개는 작업 도중, 철근 끝단이 고정 지지대 밖으로 이탈해 있던 상태에서 항복점에 도달했습니다. 파단과 동시에 방출된 강재의 탄성 탄력에 의해 약 4.2kg의 잔여 철근 토막이 회전 비산하여 8m 뒤에 위치해 있던 동료 근로자의 보안경을 관통하고 중상을 입혔습니다.'
+                    },
+                    checklist: [
+                        { id: 'step2-1', item: '절단기 가동 시 고속 비산 파편을 방어하는 고정식 투명 방호 가림막을 구축하였는가?' },
+                        { id: 'step2-2', item: '절곡기(Bender) 회전축 반경 내 소성변형 구간에 비상 정지(Emergency Stop) 스위치를 확보했는가?' },
+                        { id: 'step2-3', item: '가공 중 장대 철근의 끝단 휨 반경을 통제하는 물리적 접근 방지 안전 울타리를 둘렀는가?' }
+                    ],
+                    svgType: 'bending'
+                },
+                {
+                    step: '03',
+                    phase: '철근 조립 및 설치 (벽체 및 기둥)',
+                    subtitle: '고세장비 구조물 좌굴 예방 및 전도 방지',
+                    hazard: {
+                        title: '수직 자립 부재의 세장비 증가에 따른 좌굴(Buckling) 및 전도',
+                        mechanics: '구조역학 / 압축 좌굴 (Euler Buckling)',
+                        formula: 'P_cr = (π² · E · I) / (K · L)²',
+                        formulaDesc: '자립 높이(L)가 2배가 되면 좌굴 허용 하중(P_cr)은 4분의 1로 급락하여 구조 전도 발생.',
+                        desc: '기둥이나 벽체의 철근을 높게 연장하여 수직 자립시킬수록 단면적 대비 길이가 길어져 세장비가 기하급수적으로 불어납니다. 타설되지 않은 가설 철근망은 매우 유연한 상태이므로, 수평 풍하중이 작용하면 중심 축선이 빗나가는 P-Delta 효과가 촉발되어 미세한 압축 하중에도 부재 전체가 순식간에 구조적 평형을 잃고 꺾여 무너집니다.'
+                    },
+                    accident: {
+                        title: '풍하중 및 P-Delta 편심 효과에 따른 벽체 철근 전도 사고',
+                        caseDesc: '2023년 강원도 아파트 벽체 배근 공사 현장에서 자립 높이 5.5m에 이르는 대형 벽체 철근망을 조립한 후 임시 버팀대를 체결하지 않고 방치했습니다. 오후에 갑자기 불어닥친 순간 풍속 12m/s의 돌풍(수평하중)을 이기지 못하고 세장비가 한계치를 초과한 철근망 40m 구간이 연쇄 좌굴을 일으키며 수평으로 전도되어 하단에서 결속 중이던 작업자들을 덮쳤습니다.'
+                    },
+                    checklist: [
+                        { id: 'step3-1', item: '자립 높이 4m를 초과하는 수직 철근군에 연성 보정용 임시 와이어 가이드를 대칭 축조했는가?' },
+                        { id: 'step3-2', item: '노출되어 돌출된 철근 선단부에 실족 찔림 방지용 고강도 안전 보호캡(Safety Cap)을 끼웠는가?' },
+                        { id: 'step3-3', item: '기둥 및 벽체 하부 연결근(Dowel Bar)의 매립 깊이가 구조 정착 기준값을 온전히 만족하는가?' }
+                    ],
+                    svgType: 'buckling'
+                },
+                {
+                    step: '04',
+                    phase: '슬래브 및 보 철근 배치 (고소 작업 포함)',
+                    subtitle: '고소 작업 안전선 및 디딤판 마찰력 확보',
+                    hazard: {
+                        title: '거푸집 경계면 수막 및 오일 박리제에 의한 추락 위험',
+                        mechanics: '물리학 / 마찰학 (Tribology) & 모멘트 처짐',
+                        formula: 'F_f = μ · N',
+                        formulaDesc: '박리제 유입 시 마찰계수(μ)가 0.1 이하로 추락하여 실족 추락 유발.',
+                        desc: '보 거푸집 상부나 슬래브 외곽 배근 작업은 추락 방지선이 느슨한 고소 단부에서 이루어집니다. 거푸집 표면에 미리 도포된 오일 성분의 거푸집 박리제가 묻어나거나 우천으로 수막이 생기면 작업화와 접촉면 간의 정적 마찰력이 완전 상실됩니다. 이 상태에서 설치 단계의 보 철근을 딛는 순간 미세한 모멘트 처짐이 발생하며 무게중심을 잃고 낙하합니다.'
+                    },
+                    accident: {
+                        title: '박리제 유입으로 인한 슬래브 외곽 단부 추락사고',
+                        caseDesc: 'OO 빌딩 지상 4층 슬래브 배근 작업 중 한 형틀공이 보 거푸집 단부에 유입되어 있던 누출 박리제를 밟아 균형을 잃고 미끄러졌습니다. 수평 비계 바깥쪽으로 떨어질 때 착용하고 있던 추락 방지 구명 안전 벨트가 슬래브 날카로운 거푸집 모서리에 강하게 마찰되면서 구명줄이 단열 인장 파단되어 지상 12m 아래로 추락해 사망했습니다.'
+                    },
+                    checklist: [
+                        { id: 'step4-1', item: '거푸집 표면 박리제 과다 도포 및 우천 직후 물 고임부를 완전히 제거하고 건조하였는가?' },
+                        { id: 'step4-2', item: '안전대 수평 구명줄(Life Line)의 정착 앵커리지가 강재 프레임에 견고히 체결되었는가?' },
+                        { id: 'step4-3', item: '슬래브 단부 및 개구부 주변에 견고한 고정식 가설 방호 난간과 안전망을 가설 완료했는가?' }
+                    ],
+                    svgType: 'falling'
+                },
+                {
+                    step: '05',
+                    phase: '철근 자재 소운반 및 야적·보관',
+                    subtitle: '지반 지지 성능 및 적재 안정성 평형',
+                    hazard: {
+                        title: '부등침하에 의한 중량 철근 적재 더미의 미끄러짐 붕괴 위험',
+                        mechanics: '토질역학 / 지반 허용지지력 상실 (Subgrade Failure)',
+                        formula: 'q_a ≥ ∑P / A',
+                        formulaDesc: '야적 단위면적당 집중하중(P)이 지반 허용 지지력(q_a)을 넘어서 부등침하 촉발.',
+                        desc: '단위 다발당 수 톤에 이르는 철근을 현장에 보관할 때, 지반이 강우 등의 영향으로 부등침하를 일으키면 평형 상태를 유지하던 적재 더미의 무게 중심선이 한쪽으로 이탈합니다. 이로 인해 철근 사이에 가해지는 수평 분력이 발생하고 고임용 목재가 파괴되면서 묶음이 한순간에 터져 원형 굴림 붕괴로 발전합니다.'
+                    },
+                    accident: {
+                        title: '장마철 다단 적재 야적장 지반 붕괴로 인한 협착사고',
+                        caseDesc: '장마 기간 직후 연약해진 비포장 야적장 지반에 별도의 다짐 및 받침판 보강 없이 철근 다발을 3단(약 12톤)으로 적재해 두었습니다. 하부 지반이 수분을 흡수하여 허용지지력을 상실하면서 부등침하가 발생하였고, 적재 수평 균형이 무너지며 상부 4톤 철근 다발이 쐐기목을 깨고 측면으로 굴러 떨어져 옆에서 자재 검수 중이던 검수원의 다리가 압착 단열되는 중상을 가했습니다.'
+                    },
+                    checklist: [
+                        { id: 'step5-1', item: '자재 야적 지반의 평탄도를 확보하고 침하 방지용 강재 침목 또는 전용 패드를 배치했는가?' },
+                        { id: 'step5-2', item: '철근 다단 야적 시 최하단 유동 방지를 위한 전용 고정 쐐기를 양측면에 설치했는가?' },
+                        { id: 'step5-3', item: '강재의 산화 예방 및 표면 부식 한계 상태 억제를 위해 우천 대비 방수 포포를 피복하였는가?' }
+                    ],
+                    svgType: 'storage'
+                },
+                {
+                    step: '06',
+                    phase: '철근 인력 운반 및 소배근 작업',
+                    subtitle: '인체 생체역학적 응력 집중 관리',
+                    hazard: {
+                        title: '요추 부위의 유효 압축 응력 집중 및 순간적 하중 전가 (Shock Load)',
+                        mechanics: '생체역학 / 응력 집중 (Stress Concentration)',
+                        formula: 'M_spine = F_load · d_arm',
+                        formulaDesc: '허리를 구부릴수록 모멘트 팔길(d)이 길어져 요추 L5-S1 부위에 수백kg급의 압축 하중이 가해짐.',
+                        desc: '철근은 대표적인 중량 가설 부재입니다. 인력으로 운반 시 상체를 굽힌 비대칭 자세는 요추 추간판에 심각한 응력 집중을 발생시킵니다. 특히 2인 1조 운반 중 전방 작업자가 지반 요철에 걸려 넘어지는 등 돌발상황이 생기면 전체 하중이 가속도와 함께 반대편 근로자에게 순간적으로 전가되는 충격 하중(Shock Load) 현상으로 인해 척추 관절의 영구적 손상을 야기합니다.'
+                    },
+                    accident: {
+                        title: '2인 1조 철근 인력 소운반 도중 동적 충격 하중 허리 손상 사고',
+                        caseDesc: '아파트 지하층 공사 구간에서 2인 1조로 길이 8m급 고강도 철근을 어깨에 메고 통로를 이동하던 중, 맨 앞 근로자가 가설 배수로 단차를 보지 못하고 발을 헛디뎠습니다. 그 바람에 철근의 앞쪽이 바닥으로 처지면서 철근 전체 자중과 동적 회전 모멘트 충격력(Shock Load)이 뒤쪽 근로자의 요추 부위에 고스란히 집중되어 허리 디스크가 급성 파열되는 외상이 일어났습니다.'
+                    },
+                    checklist: [
+                        { id: 'step6-1', item: '2인 이상 인력 양중 시 키와 어깨 높이가 맞는 작업자를 매칭하여 수평 평형을 유지했는가?' },
+                        { id: 'step6-2', item: '운반 이동 통로상에 요철, 잔유물, 전선 가설선 등 실족 유발 구조물을 완전 치웠는가?' },
+                        { id: 'step6-3', item: '인력 한계 하중 가이드라인(성인 남성 25kg 미만)을 초과하는 부재의 무리한 인력 운송을 금지했는가?' }
+                    ],
+                    svgType: 'lumbar'
+                },
+                {
+                    step: '07',
+                    phase: '스페이서 및 셔럽·늑근 결속 작업',
+                    subtitle: '수평연속부 처짐 거동 제어 및 간극 압착 방지',
+                    hazard: {
+                        title: '단위미터당 누적 자중 및 집중하중에 의한 철근 처짐·협착 위험',
+                        mechanics: '구조역학 / 휨 처짐 (Elastic Deflection)',
+                        formula: 'δ_max = (5 · w · L⁴) / (384 · E · I)',
+                        formulaDesc: '다발 자중(w) 및 위를 보행하는 집중 활하중(P)에 따라 슬래브 철근망의 수평 변위(δ)가 급증함.',
+                        desc: '슬래브 배근 후 철근 하부에 균일한 피복 두께 유지를 위한 콘크리트 스페이서를 밀어 넣을 때, 상부 철근망 위로는 수많은 보행 하중(Live Load)이 작용합니다. 연속보 형태를 띤 철근 구조에 다발적 처짐 한계를 초과하는 국부적 압박이 가해지면 하단부 거푸집과 철근망 간의 간격이 순식간에 메워지면서 손가락이 압박 파쇄되는 협착 위험이 상존합니다.'
+                    },
+                    accident: {
+                        title: '슬래브 하부 스페이서 주입 작업 중 상부 보행 하중 협착 사고',
+                        caseDesc: '2024년 주차장 슬래브 시공 현장에서 한 작업자가 무릎을 꿇고 손을 슬래브 상·하부 철근망 틈새로 집어넣어 콘크리트 스페이서를 위치를 조정하고 있었습니다. 이때 철근 위로 무거운 소형 장비를 운반하던 다른 인부들이 상부 철근망을 밟고 지나가는 순간, 처짐 변위(Deflection)가 45mm 이상 급증하며 철근망과 하부 거푸집 틈새에 작업자의 왼손 손가락이 강력하게 협착되어 손가락 2개가 영구 변형 골절되었습니다.'
+                    },
+                    checklist: [
+                        { id: 'step7-1', item: '스페이서를 밀어 넣거나 결속선 시공 시, 철근 사이 손 강제 삽입을 배제하고 전용 집게대를 쓰는가?' },
+                        { id: 'step7-2', item: '스페이서 설치 완료 전까지 상부 철근 구조 위로 작업자 보행 및 자재 적치를 통제하고 있는가?' },
+                        { id: 'step7-3', item: '부재 종류별 적정 피복 두께 규격(기초 80mm, 보/기둥 40mm)을 정밀 지그로 계측 확보했는가?' }
+                    ],
+                    svgType: 'deflection'
+                },
+                {
+                    step: '08',
+                    phase: '야간 및 악천후(강풍·우천) 시 철근 작업',
+                    subtitle: '시각 인지 한계 극복 및 우천 수막 마찰 제어',
+                    hazard: {
+                        title: '시각적 조도 저하에 따른 인지 지연 및 마찰계수 극하강 위험',
+                        mechanics: '광학 및 마찰학 / 점착 손실 (Loss of Cohesion)',
+                        formula: 'E_lux = Φ / A',
+                        formulaDesc: '조도(E)가 75 Lux 이하로 떨어질 시 인간 인지 지연 시간이 주간 대비 3배 이상 길어짐.',
+                        desc: '야간 시공이나 가랑비, 서리가 동반된 악천후 시 철근 마디는 얼음판과 같은 미끄러운 상태가 됩니다. 게다가 조도가 균일하지 않은 어두운 작업 공간에서는 돌출된 연결철근이나 슬래브 개구부 단차면을 시각적으로 신속하게 판단하지 못하게 되어 발이 통째로 틈새에 끼이거나 개구부 밑으로 그대로 전락하는 비정상적인 유체적 마찰력 손실 재해가 발생합니다.'
+                    },
+                    accident: {
+                        title: '악천후 야간 연장근무 중 개구부 미인지 실족 추락사고',
+                        caseDesc: '겨울철 동절기 골조 마감을 위해 오후 7시경 어두운 가랑비 속에서 야간 슬래브 결속 작업을 강행했습니다. 국부 조명등이 설치되지 않아 그림자가 깊게 드리워진 구석 지대에서 작업자가 수막이 생겨 극도로 미끄러운 이형 철근 마디를 디디며 이동하다가, 미끄러지면서 보강 처리가 안 된 설비 슬리브 관통 개구부(가로 50cm, 세로 50cm) 덮개를 밀쳐내고 하부층으로 그대로 추락하여 사망에 이르렀습니다.'
+                    },
+                    checklist: [
+                        { id: 'step8-1', item: '야간 시공을 진행하는 전체 철근 배근 구역에 균일한 조도(최소 150 Lux 이상)의 타워 서치라이트를 점등하였는가?' },
+                        { id: 'step8-2', item: '강풍(풍속 10m/s 이상) 또는 강우(1mm/h 이상) 기상특보 예보 시 야외 고소 철근조립 작업을 즉시 전면 중단하였는가?' },
+                        { id: 'step8-3', item: '미끄럼 저항 성능이 우수한 요철형 특수 창 안전화 및 보냉 그립 안전장갑을 무상 공급하였는가?' }
+                    ],
+                    svgType: 'weather'
+                }
+            ];
+        </script>
+
+        <script>
+            // --- React-like State Management in Vanilla JS ---
+            const state = {
+                activeTab: 'process-detail', // 'process-detail' | 'spec-table' | 'eng-calc'
+                selectedStepIdx: 0,
+                mechanicsFilter: 'All',
+                userCheckedMap: {}, // Keeps track of checked IDs
+                calcRebarIndex: 2, // Default D16
+                calcLength: 8,
+                calcCount: 150,
+                concreteStrength: '24',
+                rebarGrade: 'SD400',
+                locationType: 'other'
+            };
+
+            // Initialize userCheckedMap with false for all checklist items
+            PROCESS_STEPS_DATA.forEach(step => {
+                step.checklist.forEach(item => {
+                    state.userCheckedMap[item.id] = false;
+                });
+            });
+        </script>
+
+        <!-- HEADER SECTION -->
+        <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-50 transition-all">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col lg:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-500 text-slate-950 p-2 rounded-lg font-black text-xl tracking-tight shadow-md flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                            철근공사 공학 안전 지식 허브
+                            <span class="text-[9px] px-2 py-0.5 rounded-full bg-slate-800 text-amber-400 font-bold border border-slate-700 uppercase tracking-wider">KS & Structural Eng</span>
+                        </h1>
+                        <p class="text-xs text-slate-400">구조·재료·생체 역학 기반 8대 공정 위험 메커니즘 & 표준 데이터베이스</p>
+                    </div>
+                </div>
+                
+                <!-- NAVIGATION TABS -->
+                <nav class="flex flex-wrap gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                    <button onclick="switchTab('process-detail')" id="tab-btn-process-detail" class="px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-md">
+                        ⚠️ 8대 공정 안전 도서
+                    </button>
+                    <button onclick="switchTab('spec-table')" id="tab-btn-spec-table" class="px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-slate-800">
+                        📏 KS D 3504 제원표
+                    </button>
+                    <button onclick="switchTab('eng-calc')" id="tab-btn-eng-calc" class="px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-slate-800">
+                        🧮 정착·중량 엔지니어링 계산기
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- HERO COMPONENT -->
+        <section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center lg:text-left lg:flex lg:items-center lg:justify-between lg:gap-10">
+                <div class="max-w-3xl">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-500 px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20 inline-block mb-3">
+                        KOREA CONSTRUCTION COMPLIANCE SYSTEM
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
+                        역학 설계 기반의 안전 검증<br />
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500">
+                            철근공사 공정별 위험-사례-체크 통합망
+                        </span>
+                    </h2>
+                    <p class="mt-3 text-sm text-slate-400 leading-relaxed">
+                        본 플랫폼은 철근공사 8대 공정의 공학적 핵심 위해요소를 재료역학, 구조역학, 생체역학 수식으로 분해하고, 실제 일어났던 현장 실패 사례와 조립 시 무조건 대조해야 할 핵심 체크리스트 및 CAD 도면 설계도를 한곳에 융합했습니다.
+                    </p>
+                </div>
+                
+                <!-- Total Dashboard Widget -->
+                <div class="mt-6 lg:mt-0 bg-slate-900/80 p-5 rounded-2xl border border-slate-800 shadow-2xl min-w-[280px] max-w-sm mx-auto">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center justify-between">
+                        <span>현장 통합 안전 지표</span>
+                        <span class="text-amber-500 font-mono">LIVE GAUGE</span>
+                    </h3>
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex items-center justify-center" id="global-progress-container">
+                            <!-- Progress ring rendered dynamically -->
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="block text-xs font-bold text-slate-300">종합 품질 자가인증율</span>
+                            <span class="text-[10px] text-slate-500 leading-tight block mt-0.5">8대 공정 총 24개 위해 예방 지표 달성 통계</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MAIN LAYOUT -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+            <!-- TAB 1: 8대 공정 안전 도서 -->
+            <section id="tab-content-process-detail" class="space-y-8">
+                <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                            <span class="text-amber-500">01.</span> 철근공사 8대 공정별 세부 위험·사례·체크 도서관
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">물리적 파괴 원인과 실제 참사 시나리오 및 통제 대안을 완전히 결합한 입체 조견표입니다.</p>
+                    </div>
+
+                    <!-- Filtering Options -->
+                    <div class="flex flex-wrap gap-1.5 bg-slate-900 p-1 rounded-lg border border-slate-800 self-start md:self-auto">
+                        <button onclick="setFilter('All')" id="filter-btn-All" class="px-3 py-1 rounded-md text-[10px] font-semibold transition-all bg-amber-500 text-slate-950 font-bold">All</button>
+                        <button onclick="setFilter('재료역학')" id="filter-btn-재료역학" class="px-3 py-1 rounded-md text-[10px] font-semibold transition-all text-slate-400 hover:text-white">재료역학</button>
+                        <button onclick="setFilter('구조역학')" id="filter-btn-구조역학" class="px-3 py-1 rounded-md text-[10px] font-semibold transition-all text-slate-400 hover:text-white">구조역학</button>
+                        <button onclick="setFilter('물리학')" id="filter-btn-물리학" class="px-3 py-1 rounded-md text-[10px] font-semibold transition-all text-slate-400 hover:text-white">물리학</button>
+                        <button onclick="setFilter('토질역학')" id="filter-btn-토질역학" class="px-3 py-1 rounded-md text-[10px] font-semibold transition-all text-slate-400 hover:text-white">토질역학</button>
+                        <button onclick="setFilter('생체역학')" id="filter-btn-생체역학" class="px-3 py-1 rounded-md text-[10px] font-semibold transition-all text-slate-400 hover:text-white">생체역학</button>
+                    </div>
+                </div>
+
+                <!-- PROCESS CARDS GRID / LIST -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left Column: 8 steps navigation -->
+                    <div class="lg:col-span-4 space-y-2.5" id="steps-navigation-list">
+                        <!-- Steps injected dynamically by JavaScript -->
+                    </div>
+
+                    <!-- Right Column: Deep structural, hazard & checklist breakdown -->
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 sm:p-8 relative overflow-hidden shadow-2xl">
+                            <!-- Decorative glow -->
+                            <div class="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-amber-500/5 to-transparent rounded-full blur-3xl -z-10"></div>
+                            
+                            <!-- Step Header Detail -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 mb-6 gap-3">
+                                <div class="flex items-center gap-3">
+                                    <span id="detail-step-code" class="text-xs font-bold text-amber-500 px-2.5 py-0.5 bg-amber-500/10 rounded border border-amber-500/20">
+                                        공정코드 01
+                                    </span>
+                                    <h4 id="detail-step-title" class="text-xl font-black text-white">철근 자재 반입 및 양중</h4>
+                                </div>
+                                <span class="text-[10px] font-mono text-slate-500 bg-slate-950 px-2 py-0.5 border border-slate-850 rounded uppercase">Forensic Science Report</span>
+                            </div>
+
+                            <!-- DYNAMIC DIAGRAM CONTAINER -->
+                            <div class="mb-6">
+                                <h5 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2.5 flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                    구조역학적 응력 거동 설계 도면 (Safety Diagram)
+                                </h5>
+                                <div id="diagram-view-port">
+                                    <!-- Dynamic SVG diagram will be rendered here -->
+                                </div>
+                            </div>
+
+                            <!-- PILLARS -->
+                            <div class="space-y-4">
+                                <!-- 1. Hazard Core -->
+                                <div class="p-5 bg-slate-950 rounded-xl border border-slate-850 space-y-3">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-900 pb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-rose-500 text-sm">🚨</span>
+                                            <h5 id="detail-hazard-title" class="text-sm font-black text-slate-100">위해요인</h5>
+                                        </div>
+                                        <span id="detail-hazard-mechanics" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-rose-500/30 text-rose-400 bg-rose-500/5">
+                                            역학 분류
+                                        </span>
+                                    </div>
+                                    <p id="detail-hazard-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+                                    
+                                    <div class="mt-4 bg-slate-900/80 p-4 rounded-lg border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                        <div id="detail-hazard-formula" class="font-mono text-amber-400 text-xs font-bold bg-slate-950 py-1.5 px-3 rounded-md border border-slate-800 tracking-wide">
+                                            수식
+                                        </div>
+                                        <span id="detail-hazard-formula-desc" class="text-[10px] text-slate-400 font-medium md:text-right">
+                                            수식 설명
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- 2. Accident Case -->
+                                <div class="p-5 bg-gradient-to-br from-slate-900 to-rose-950/10 rounded-xl border border-rose-950/40 space-y-2">
+                                    <div class="flex items-center gap-2 text-rose-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                        </svg>
+                                        <strong class="text-xs uppercase font-extrabold tracking-wider">실제 현장 재해 발생 케이스 (Forensic Incident Analysis)</strong>
+                                    </div>
+                                    <h6 id="detail-accident-title" class="text-xs font-bold text-slate-200">사고 타이틀</h6>
+                                    <p id="detail-accident-desc" class="text-xs text-slate-400 leading-relaxed"></p>
+                                </div>
+
+                                <!-- 3. Checklist -->
+                                <div class="space-y-2.5 pt-2">
+                                    <div class="flex items-center justify-between">
+                                        <h5 class="text-xs font-extrabold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
+                                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            본 공정 핵심 품질·안전 안전 체크리스트
+                                        </h5>
+                                        <span id="detail-checklist-counter" class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                            0 / 3 달성
+                                        </span>
+                                    </div>
+                                    <div class="space-y-2" id="detail-checklist-list">
+                                        <!-- Dynamic Checklist items go here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: KS D 3504 제원표 -->
+            <section id="tab-content-spec-table" class="space-y-6 hidden">
+                <div class="border-b border-slate-800 pb-4">
+                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                        📏 KS D 3504 이형철근 표준 치수 및 기하학적 제원 데이터
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">한국 국가 건설 규격인 KS 마크 인증 규격에 부합하는 철근 단면과 치수 기준입니다.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-sky-400 font-mono uppercase tracking-widest block mb-1">Rigidity Mechanism</span>
+                        <h4 class="text-sm font-bold text-slate-100">이형철근 마디와 리브의 역할</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                            표면에 등간격으로 축조된 기하학적 돌기는 주변 굳은 콘크리트와의 기계적 맞물림 효과를 일으키며 미끄러짐 마찰 및 결합 강성을 극한 상태로 끌어올립니다.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-amber-500 font-mono uppercase tracking-widest block mb-1">Grade Standards</span>
+                        <h4 class="text-sm font-bold text-slate-100">강종 등급 표시 체계</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                            SD400은 항복강도 400 MPa(메가파스칼)을 보증하고 끝단에 녹색 도료가 도포되며, SD500은 500 MPa 항복강도 기준을 충족하고 흑색으로 착색 관리됩니다.
+                        </p>
+                    </div>
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-800">
+                        <span class="text-[10px] text-emerald-400 font-mono uppercase tracking-widest block mb-1">Standard Margin</span>
+                        <h4 class="text-sm font-bold text-slate-100">허용 자중 편차 공차 범위</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mt-2">
+                            제조 한계에 의해 이형철근 1가닥당 단위 질량 허용오차는 D16 규격 이하는 ±5.0% 수준, D19 규격 이상의 고중량 부재는 ±4.0% 편차 공차율 이내여야 합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-950 text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="px-6 py-4">규격 호칭 (Designation)</th>
+                                    <th class="px-6 py-4 text-right">공칭 직경 (Diameter, mm)</th>
+                                    <th class="px-6 py-4 text-right">공칭 단면적 (Area, mm²)</th>
+                                    <th class="px-6 py-4 text-right">단위 중량 (Weight, kg/m)</th>
+                                    <th class="px-6 py-4 text-center">용도군 설계 추천 가이드</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800/60" id="spec-table-body">
+                                <!-- Injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: 정착·중량 계산기 -->
+            <section id="tab-content-eng-calc" class="space-y-6 hidden">
+                <div class="border-b border-slate-800 pb-4">
+                    <h3 class="text-2xl font-bold text-white flex items-center gap-2">
+                        🧮 철근 공학 구조 계산량 & 최소 연장 정착 이음 연산기
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-1">KDS 14 20 52(콘크리트구조 설계기준) 설계 변수를 모방하여 철근 부재의 실 투입 중량과 구조 역학적 정입 연장을 모사합니다.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Parameter Settings -->
+                    <div class="lg:col-span-5 bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-5">
+                        <h4 class="text-sm font-bold text-white border-b border-slate-800 pb-2.5 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"></path>
+                            </svg>
+                            변수 조절 입력 인터페이스
+                        </h4>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">이형철근 공칭 규격 선택</label>
+                            <div class="grid grid-cols-3 gap-1.5" id="calc-rebar-selectors">
+                                <!-- Injected dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">개별 철근 부재 길이 (m)</label>
+                                <input
+                                    id="calc-input-length"
+                                    type="number"
+                                    value="8"
+                                    min="1"
+                                    max="20"
+                                    oninput="updateCalculatorState('calcLength', this.value)"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-amber-500 font-mono"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">투입 소요 가닥수 (EA)</label>
+                                <input
+                                    id="calc-input-count"
+                                    type="number"
+                                    value="150"
+                                    min="1"
+                                    oninput="updateCalculatorState('calcCount', this.value)"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-amber-500 font-mono"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">콘크리트 압축 설계강도</label>
+                                <select
+                                    id="calc-select-strength"
+                                    onchange="updateCalculatorState('concreteStrength', this.value)"
+                                    class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-2.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500"
+                                >
+                                    <option value="24">fck = 24 MPa (보통)</option>
+                                    <option value="30">fck = 30 MPa (고품질)</option>
+                                    <option value="40">fck = 40 MPa (초고강도)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">강재 강종 등급 규격</label>
+                                <div class="flex bg-slate-950 rounded-lg p-0.5 border border-slate-800">
+                                    <button onclick="updateCalculatorState('rebarGrade', 'SD400')" id="grade-btn-SD400" class="flex-1 py-1.5 rounded text-[10px] font-bold text-center transition-all bg-slate-900 text-amber-400">SD400</button>
+                                    <button onclick="updateCalculatorState('rebarGrade', 'SD500')" id="grade-btn-SD500" class="flex-1 py-1.5 rounded text-[10px] font-bold text-center transition-all text-slate-500">SD500</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">상부철근 부착 보정계수 (Ψt)</label>
+                            <div class="flex bg-slate-950 rounded-lg p-0.5 border border-slate-800">
+                                <button onclick="updateCalculatorState('locationType', 'other')" id="loc-btn-other" class="flex-1 py-1.5 rounded text-[10px] font-semibold text-center transition-all bg-slate-900 text-white font-bold">하부 보강재 / 수직 기둥부</button>
+                                <button onclick="updateCalculatorState('locationType', 'top')" id="loc-btn-top" class="flex-1 py-1.5 rounded text-[10px] font-semibold text-center transition-all text-slate-500">상부근 보정 적용 (x1.3)</button>
+                            </div>
+                            <span class="text-[9px] text-slate-500 leading-normal mt-1 block">
+                                * 콘크리트 타설 침하로 인해 수평 부재 내 상부 철근 하부 표면에 기포 공극이 생기기 쉬우므로 정착 성능 약화를 예방하고자 배율을 증폭 보정합니다.
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Engineering Output Dashboard -->
+                    <div class="lg:col-span-7 bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-800 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -z-10"></div>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                                    📋 공학 정산 연산 리포트 (Calculations Report)
+                                </h4>
+                                <span class="text-[10px] bg-slate-950 px-2 py-0.5 text-sky-400 font-mono rounded border border-slate-850">Certified Engine</span>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                    <span class="text-[10px] text-slate-400 font-bold block mb-1">총 부재 중량 합계량</span>
+                                    <span id="out-weight-kg" class="text-2xl font-black font-mono text-slate-100">0 kg</span>
+                                </div>
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
+                                    <span class="text-[10px] text-slate-400 font-bold block mb-1">톤 단위 변환 자중</span>
+                                    <span id="out-weight-ton" class="text-2xl font-black font-mono text-amber-400">0 Ton</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                                    <div>
+                                        <strong class="block text-xs font-bold text-slate-200">최소 정착 임계 길이 (Development Length)</strong>
+                                        <span class="text-[9px] text-slate-500 block">콘크리트 심부 내 가압 부착 정착 유지를 위한 필수 치수선</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span id="out-dev-m" class="text-xl font-extrabold font-mono text-indigo-400">0 m</span>
+                                        <span id="out-dev-mm" class="block text-[9px] text-slate-500">(0 mm)</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 flex justify-between items-center">
+                                    <div>
+                                        <strong class="block text-xs font-bold text-slate-200">인장 겹침 이음 표준 길이 (Lap Splice Length)</strong>
+                                        <span class="text-[9px] text-slate-500 block">이음 구간 동일 단면부 가설 시 기준 겹침 결속 연장 (B급 시방서)</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span id="out-splice-m" class="text-xl font-extrabold font-mono text-violet-400">0 m</span>
+                                        <span id="out-splice-mm" class="block text-[9px] text-slate-500">(0 mm)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-slate-850 text-[10px] text-slate-500 leading-relaxed">
+                            <p>* 본 산식은 국토교통부 표준 시방서의 대표 수식을 가식화한 예측값입니다.</p>
+                            <p>* 실제 부재 정량 산정은 건축 구조 설계 도서 상 지정된 구조 정합 치수를 우선 검측하십시오.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER AREA -->
+        <footer class="border-t border-slate-900 bg-slate-950 text-slate-500 py-10 mt-16 text-center text-[10px] leading-relaxed">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+                <div class="flex flex-wrap justify-center gap-4 text-slate-400 font-medium">
+                    <span class="cursor-default">KDS 14 20 00 콘크리트구조 설계기준</span>
+                    <span>•</span>
+                    <span class="cursor-default">KS D 3504 한국산업표준 품질규격</span>
+                    <span>•</span>
+                    <span class="cursor-default">KCS 14 20 11 철근공사 표준공학시방</span>
+                </div>
+                <p>© 2026 Rebar Engineering Knowledge & Safety Hub. All Rights Reserved. 본 허브는 시공 역학과 물리 법칙에 의거한 안전 준수 목적 교육 공학용 플랫폼입니다.</p>
+            </div>
+        </footer>
+
+        <!-- DYNAMIC SVG DIAGRAM GENERATOR -->
+        <script>
+            function generateSVG(type) {
+                const gridPattern = `
+                    <defs>
+                        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(51, 65, 85, 0.15)" stroke-width="1" />
+                        </pattern>
+                    </defs>
+                `;
+                
+                switch (type) {
+                    case 'crane':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Crane Arm -->
+                                <path d="M 40 40 L 320 40" stroke="#475569" stroke-width="6" stroke-linecap="round" />
+                                <line x1="120" y1="40" x2="120" y2="70" stroke="#94a3b8" stroke-width="2" />
+                                <!-- Hook -->
+                                <circle cx="120" cy="73" r="4" fill="#ef4444" />
+                                <!-- Wire Rope -->
+                                <line x1="120" y1="75" x2="60" y2="160" stroke="#f59e0b" stroke-width="3" />
+                                <line x1="120" y1="75" x2="180" y2="160" stroke="#f59e0b" stroke-width="3" />
+                                <!-- Angle Indicator -->
+                                <path d="M 95 125 A 40 40 0 0 1 145 125" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" />
+                                <text x="105" y="115" class="fill-rose-500 font-mono text-[11px] font-bold">Angle θ &gt; 60°</text>
+                                <text x="50" y="90" class="fill-amber-400 font-mono text-[10px]">Tension T₁ (Max)</text>
+                                <text x="150" y="90" class="fill-amber-400 font-mono text-[10px]">Tension T₂ (Max)</text>
+                                <!-- Rebar Bundle -->
+                                <rect x="30" y="160" width="180" height="20" rx="3" fill="#3b4f6b" stroke="#1e293b" stroke-width="2" />
+                                <line x1="30" y1="167" x2="210" y2="167" stroke="#94a3b8" stroke-width="1" />
+                                <line x1="30" y1="173" x2="210" y2="173" stroke="#94a3b8" stroke-width="1" />
+                                <!-- Center of gravity warning -->
+                                <circle cx="150" cy="170" r="6" fill="#ef4444" />
+                                <line x1="150" y1="170" x2="185" y2="210" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2 2" />
+                                <text x="190" y="212" class="fill-rose-400 text-[10px]">Eccentric Moment (e)</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">CRANE HOIST MECHANICAL VIEW</text>
+                            </svg>
+                        `;
+                    case 'bending':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Machine Table -->
+                                <rect x="60" y="60" width="280" height="120" rx="6" fill="#1e293b" stroke="#334155" stroke-width="2" />
+                                <!-- Bending Disc -->
+                                <circle cx="200" cy="120" r="40" fill="#0f172a" stroke="#475569" stroke-width="3" />
+                                <circle cx="200" cy="120" r="8" fill="#e2e8f0" />
+                                <!-- Moving Roller Pin -->
+                                <circle cx="175" cy="95" r="12" fill="#f59e0b" stroke="#d97706" stroke-width="2" />
+                                <path d="M 160 80 A 55 55 0 0 1 240 85" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 2" />
+                                <path d="M 235 80 L 243 88 L 235 94 Z" fill="#ef4444" />
+                                <text x="210" y="70" class="fill-rose-500 font-mono text-[10px] font-bold">Torque (M)</text>
+                                <!-- Rebar Bending Shape -->
+                                <path d="M 40 120 L 200 120 L 250 170" fill="none" stroke="#38bdf8" stroke-width="10" stroke-linecap="round" />
+                                <!-- Pinch Point Warning -->
+                                <circle cx="175" cy="120" r="14" fill="none" stroke="#ef4444" stroke-width="2" />
+                                <line x1="161" y1="106" x2="189" y2="134" stroke="#ef4444" stroke-width="2" />
+                                <text x="120" y="145" class="fill-rose-400 font-bold text-[10px]">Pinch Zone (위험)</text>
+                                <!-- Shard flying -->
+                                <path d="M 255 175 L 290 205" stroke="#ef4444" stroke-width="2" stroke-dasharray="2 2" />
+                                <circle cx="295" cy="210" r="4" fill="#ef4444" />
+                                <text x="260" y="215" class="fill-rose-400 text-[9px] font-mono">Elastic Shard Velocity (v)</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">REBAR BENDER MECHANICAL SCHEMATIC</text>
+                            </svg>
+                        `;
+                    case 'buckling':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Foundation Line -->
+                                <line x1="50" y1="200" x2="350" y2="200" stroke="#475569" stroke-width="4" />
+                                <!-- Ideal Column Axis -->
+                                <line x1="120" y1="200" x2="120" y2="50" stroke="#334155" stroke-width="1.5" stroke-dasharray="3 3" />
+                                <!-- Buckled Rebar Column -->
+                                <path d="M 120 200 Q 155 125 120 50" fill="none" stroke="#38bdf8" stroke-width="8" stroke-linecap="round" />
+                                <!-- Wind force -->
+                                <line x1="50" y1="90" x2="100" y2="90" stroke="#f59e0b" stroke-width="2" />
+                                <path d="M 100 90 L 92 85 L 92 95 Z" fill="#f59e0b" />
+                                <text x="45" y="80" class="fill-amber-400 text-[10px] font-bold">Lateral Load (Wind Force)</text>
+                                <!-- Lateral displacement -->
+                                <line x1="120" y1="125" x2="138" y2="125" stroke="#ef4444" stroke-width="1.5" />
+                                <text x="145" y="130" class="fill-rose-400 font-mono text-[10px]">Deflection (δ)</text>
+                                <!-- Buckling Load indicator -->
+                                <line x1="120" y1="20" x2="120" y2="45" stroke="#ef4444" stroke-width="2.5" />
+                                <path d="M 120 45 L 115 38 L 125 38 Z" fill="#ef4444" />
+                                <text x="80" y="30" class="fill-rose-500 font-mono text-[10px] font-bold">P ≥ Euler P_cr</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">EULER BUCKLING & DETAILED SHAPE</text>
+                            </svg>
+                        `;
+                    case 'falling':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Scaffolding Platform -->
+                                <rect x="40" y="140" width="160" height="15" fill="#334155" />
+                                <line x1="40" y1="140" x2="200" y2="140" stroke="#94a3b8" stroke-width="2" />
+                                <!-- Low Friction zone -->
+                                <ellipse cx="140" cy="140" rx="30" ry="3" fill="#f59e0b" fill-opacity="0.4" />
+                                <text x="110" y="130" class="fill-amber-400 font-bold text-[9px]">Oil / Water (μ ≤ 0.1)</text>
+                                <!-- Protruding Sharp Rebar -->
+                                <line x1="280" y1="240" x2="280" y2="150" stroke="#f43f5e" stroke-width="5" />
+                                <path d="M 280 150 L 277 155 L 283 155 Z" fill="#f43f5e" />
+                                <!-- Danger Area -->
+                                <circle cx="280" cy="150" r="10" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2 2" />
+                                <text x="240" y="135" class="fill-rose-400 font-mono text-[10px] font-bold">No Cap! Spearing Hazard</text>
+                                <!-- Lifeline cut -->
+                                <path d="M 80 80 Q 140 100 200 60" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="4 2" />
+                                <text x="100" y="55" class="fill-rose-500 font-bold text-[10px]">Anchor Point Fracture Area</text>
+                                <!-- Fall vector -->
+                                <path d="M 170 145 L 240 210" stroke="#ef4444" stroke-width="2" stroke-dasharray="3 3" />
+                                <path d="M 240 210 L 232 205 L 237 200 Z" fill="#ef4444" />
+                                <text x="180" y="180" class="fill-rose-400 font-mono text-[10px]">Impact Energy E_k = mgh</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">SLAB EDGE FALL & STRESS MODEL</text>
+                            </svg>
+                        `;
+                    case 'storage':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Uneven soil settlement -->
+                                <path d="M 30 190 Q 200 160 370 210" fill="none" stroke="#b45309" stroke-width="4" />
+                                <!-- Soil profile below -->
+                                <path d="M 30 190 Q 200 160 370 210 L 370 240 L 30 240 Z" fill="#1e293b" fill-opacity="0.5" />
+                                <!-- Slanted stack wood -->
+                                <rect x="80" y="150" width="240" height="12" rx="2" fill="#854d0e" transform="rotate(5, 200, 160)" />
+                                <text x="210" y="185" class="fill-amber-500 text-[10px]">Uneven Settlement (부등침하)</text>
+                                <!-- Collapsed Rebars (Circular bundles) -->
+                                <circle cx="140" cy="115" r="16" fill="#334155" stroke="#475569" stroke-width="2" />
+                                <circle cx="174" cy="112" r="16" fill="#334155" stroke="#ef4444" stroke-width="2.5" />
+                                <circle cx="210" cy="120" r="16" fill="#334155" stroke="#475569" stroke-width="2" />
+                                <!-- Arrow indicating collapse vector -->
+                                <path d="M 185 105 L 260 135" fill="none" stroke="#ef4444" stroke-width="3.5" />
+                                <path d="M 260 135 L 250 132 L 255 125 Z" fill="#ef4444" />
+                                <text x="240" y="95" class="fill-rose-500 font-bold text-[11px]">Sliding Gravity Force (F_g)</text>
+                                <!-- Wooden Wedge crushed -->
+                                <rect x="290" y="132" width="10" height="25" fill="#ef4444" />
+                                <text x="295" y="170" class="fill-rose-400 text-[9px]">Wedge Failure</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">UNSTABLE GEOTECHNICAL YARD VIEW</text>
+                            </svg>
+                        `;
+                    case 'lumbar':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Human Skeleton Silhouette schematic -->
+                                <path d="M 150 180 L 170 140 L 140 100 L 190 95" fill="none" stroke="#475569" stroke-width="4" stroke-linecap="round" />
+                                <circle cx="195" cy="85" r="10" fill="#475569" />
+                                <!-- Spine Highlight -->
+                                <path d="M 170 140 Q 150 115 140 100" fill="none" stroke="#f43f5e" stroke-width="4" />
+                                <!-- L5-S1 Joint point -->
+                                <circle cx="157" cy="118" r="7" fill="#ef4444" />
+                                <text x="170" y="122" class="fill-rose-500 font-bold text-[11px]">Spine Stress Concentrated (L5-S1)</text>
+                                <!-- Moment indicator -->
+                                <path d="M 142 125 A 15 15 0 0 1 155 105" fill="none" stroke="#ef4444" stroke-width="2" />
+                                <path d="M 155 105 L 148 107 L 153 113 Z" fill="#ef4444" />
+                                <text x="100" y="90" class="fill-amber-400 font-mono text-[10px]">Moment M = F × d</text>
+                                <!-- Carrying Rebar -->
+                                <line x1="100" y1="95" x2="280" y2="95" stroke="#38bdf8" stroke-width="7" />
+                                <text x="210" y="112" class="fill-sky-400 font-bold text-[10px]">Rebar Dead Load</text>
+                                <!-- Shock Load trigger -->
+                                <path d="M 270 95 Q 290 120 310 140" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="2 2" />
+                                <text x="290" y="160" class="fill-rose-400 text-[10px]">Sudden Drop (Shock Load)</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">BIOMECHANICAL SPINE MOMENT SCHEME</text>
+                            </svg>
+                        `;
+                    case 'deflection':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Mold Plate -->
+                                <line x1="40" y1="180" x2="360" y2="180" stroke="#475569" stroke-width="4" />
+                                <!-- Spacer block -->
+                                <rect x="90" y="155" width="25" height="25" fill="#cbd5e1" stroke="#475569" stroke-width="2" />
+                                <rect x="290" y="155" width="25" height="25" fill="#cbd5e1" stroke="#475569" stroke-width="2" />
+                                <!-- Rebar sagging between spacers -->
+                                <path d="M 40 140 L 102 140 Q 200 178 302 140 L 360 140" fill="none" stroke="#38bdf8" stroke-width="8" stroke-linecap="round" />
+                                <!-- Deflection force down -->
+                                <line x1="200" y1="80" x2="200" y2="135" stroke="#ef4444" stroke-width="3" />
+                                <path d="M 200 135 L 194 127 L 206 127 Z" fill="#ef4444" />
+                                <text x="145" y="75" class="fill-rose-500 font-bold text-[11px]">Concentrated Walk Load (P)</text>
+                                <!-- Pinch Point -->
+                                <circle cx="200" cy="158" r="12" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="2 2" />
+                                <text x="140" y="198" class="fill-rose-400 font-bold text-[10px]">Squeezing Hazard Zone (협착 우려)</text>
+                                <!-- Spacing dimension -->
+                                <line x1="200" y1="148" x2="200" y2="180" stroke="#f59e0b" stroke-width="1.5" />
+                                <text x="210" y="165" class="fill-amber-400 font-mono text-[9px]">Gap δ_max</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">CONTINUOUS REBAR DEFLECTION GRAPH</text>
+                            </svg>
+                        `;
+                    case 'weather':
+                        return `
+                            <svg class="w-full h-64 bg-slate-950 rounded-xl border border-slate-800" viewBox="0 0 400 240">
+                                ${gridPattern}
+                                <rect width="100%" height="100%" fill="url(#grid)" />
+                                <!-- Rain droplets -->
+                                <line x1="100" y1="40" x2="80" y2="80" stroke="#38bdf8" stroke-width="1" stroke-dasharray="5 5" />
+                                <line x1="200" y1="30" x2="180" y2="70" stroke="#38bdf8" stroke-width="1" stroke-dasharray="5 5" />
+                                <line x1="300" y1="45" x2="280" y2="85" stroke="#38bdf8" stroke-width="1" stroke-dasharray="5 5" />
+                                <!-- Low Light Moon/Lamp icon -->
+                                <circle cx="340" cy="50" r="15" fill="#fef08a" fill-opacity="0.2" />
+                                <circle cx="340" cy="50" r="10" fill="#fde047" />
+                                <text x="280" y="105" class="fill-yellow-300 text-[10px] font-mono">Dark State &lt; 75 Lux</text>
+                                <!-- Slippery Rebar section -->
+                                <rect x="50" y="140" width="300" height="20" rx="3" fill="#334155" />
+                                <!-- Ribs/Lugs of rebar -->
+                                <line x1="100" y1="140" x2="110" y2="160" stroke="#f59e0b" stroke-width="3.5" />
+                                <line x1="150" y1="140" x2="160" y2="160" stroke="#f59e0b" stroke-width="3.5" />
+                                <line x1="200" y1="140" x2="210" y2="160" stroke="#f59e0b" stroke-width="3.5" />
+                                <line x1="250" y1="140" x2="260" y2="160" stroke="#f59e0b" stroke-width="3.5" />
+                                <text x="80" y="180" class="fill-amber-400 text-[10px] font-bold">Frictionless Wet Ribs (μ ≈ 0)</text>
+                                <!-- Warning outline -->
+                                <polygon points="200,80 220,115 180,115" fill="none" stroke="#ef4444" stroke-width="2" />
+                                <text x="197" y="110" class="fill-rose-500 font-black text-[12px]">!</text>
+                                <text x="15" y="25" class="fill-slate-500 font-mono text-[10px]">ENVIRONMENTAL HAZARD INTERACTION</text>
+                            </svg>
+                        `;
+                    default:
+                        return '';
+                }
+            }
+        </script>
+
+        <!-- INTERACTIVE APP LOGIC -->
+        <script>
+            // --- Core Render Engine ---
+            function renderAll() {
+                renderTabs();
+                renderGlobalProgress();
+                
+                if (state.activeTab === 'process-detail') {
+                    renderStepsNavigation();
+                    renderStepDetail();
+                } else if (state.activeTab === 'spec-table') {
+                    renderSpecTable();
+                } else if (state.activeTab === 'eng-calc') {
+                    renderCalculator();
+                }
+            }
+
+            // --- Tab Switcher ---
+            function switchTab(tabId) {
+                state.activeTab = tabId;
+                renderAll();
+            }
+
+            function renderTabs() {
+                const tabs = ['process-detail', 'spec-table', 'eng-calc'];
+                tabs.forEach(tab => {
+                    const btn = document.getElementById(`tab-btn-${tab}`);
+                    const content = document.getElementById(`tab-content-${tab}`);
+                    
+                    if (tab === state.activeTab) {
+                        btn.className = "px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-md";
+                        content.classList.remove('hidden');
+                    } else {
+                        btn.className = "px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-slate-800";
+                        content.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- Progress Metric Calculations ---
+            function getStepProgress(stepIdx) {
+                const checklist = PROCESS_STEPS_DATA[stepIdx].checklist;
+                const checkedCount = checklist.filter(item => state.userCheckedMap[item.id]).length;
+                return Math.round((checkedCount / checklist.length) * 100);
+            }
+
+            function getTotalProgress() {
+                let total = 0;
+                let checked = 0;
+                PROCESS_STEPS_DATA.forEach(step => {
+                    step.checklist.forEach(item => {
+                        total++;
+                        if (state.userCheckedMap[item.id]) {
+                            checked++;
+                        }
+                    });
+                });
+                return total === 0 ? 0 : Math.round((checked / total) * 100);
+            }
+
+            function renderGlobalProgress() {
+                const progress = getTotalProgress();
+                const dashArray = 175.9;
+                const dashOffset = dashArray - (dashArray * progress) / 100;
+                
+                const container = document.getElementById('global-progress-container');
+                container.innerHTML = `
+                    <svg class="w-16 h-16 transform -rotate-90">
+                        <circle cx="32" cy="32" r="28" stroke="#1e293b" stroke-width="4" fill="transparent" />
+                        <circle cx="32" cy="32" r="28" stroke="#f59e0b" stroke-width="4" fill="transparent"
+                            stroke-dasharray="${dashArray}"
+                            stroke-dashoffset="${dashOffset}"
+                            style="transition: stroke-dashoffset 0.5s ease-in-out;" />
+                    </svg>
+                    <span class="absolute text-xs font-black text-white font-mono">${progress}%</span>
+                `;
+            }
+
+            // --- Filters ---
+            function setFilter(filter) {
+                state.mechanicsFilter = filter;
+                // Retain selection if valid within filtered list, else reset to first matched
+                const matchedIndices = [];
+                PROCESS_STEPS_DATA.forEach((p, idx) => {
+                    if (filter === 'All' || p.hazard.mechanics.includes(filter)) {
+                        matchedIndices.push(idx);
+                    }
+                });
+                if (!matchedIndices.includes(state.selectedStepIdx) && matchedIndices.length > 0) {
+                    state.selectedStepIdx = matchedIndices[0];
+                }
+                
+                // Update filter buttons appearance
+                const filters = ['All', '재료역학', '구조역학', '물리학', '토질역학', '생체역학'];
+                filters.forEach(f => {
+                    const btn = document.getElementById(`filter-btn-${f}`);
+                    if (f === filter) {
+                        btn.className = "px-3 py-1 rounded-md text-[10px] font-semibold transition-all bg-amber-500 text-slate-950 font-bold";
+                    } else {
+                        btn.className = "px-3 py-1 rounded-md text-[10px] font-semibold transition-all text-slate-400 hover:text-white";
+                    }
+                });
+
+                renderAll();
+            }
+
+            // --- Step Navigation Render ---
+            function renderStepsNavigation() {
+                const listContainer = document.getElementById('steps-navigation-list');
+                listContainer.innerHTML = '';
+
+                PROCESS_STEPS_DATA.forEach((p, idx) => {
+                    const isSelected = state.selectedStepIdx === idx;
+                    const matchesFilter = state.mechanicsFilter === 'All' || p.hazard.mechanics.includes(state.mechanicsFilter);
+                    
+                    if (!matchesFilter) return; // Skip if filtered out
+
+                    const progressPercent = getStepProgress(idx);
+                    
+                    const button = document.createElement('button');
+                    button.className = `w-full text-left p-3.5 rounded-xl border transition-all flex flex-col gap-2 ${
+                        isSelected 
+                            ? 'bg-amber-500/10 border-amber-500 text-amber-300 ring-1 ring-amber-500/30' 
+                            : 'bg-slate-900 border-slate-800 hover:bg-slate-850 text-slate-400'
+                    }`;
+                    button.onclick = () => {
+                        state.selectedStepIdx = idx;
+                        renderAll();
+                    };
+
+                    button.innerHTML = `
+                        <div class="flex items-start gap-3 w-full">
+                            <span class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${
+                                isSelected ? 'bg-amber-500 text-slate-950' : 'bg-slate-950 text-slate-500'
+                            }">
+                                ${p.step}
+                            </span>
+                            <div class="flex-1 min-w-0">
+                                <span class="block text-[9px] font-mono text-slate-500 uppercase tracking-wider">PROCESS ELEMENT</span>
+                                <h4 class="font-extrabold text-sm text-slate-200 truncate">${p.phase}</h4>
+                                <p class="text-[10px] text-slate-400 truncate mt-0.5">${p.subtitle}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full mt-1">
+                            <div class="flex justify-between text-[9px] text-slate-500 font-mono mb-0.5">
+                                <span>검사 준도율</span>
+                                <span class="${progressPercent === 100 ? 'text-emerald-400 font-bold' : 'text-amber-500'}">${progressPercent}%</span>
+                            </div>
+                            <div class="w-full h-1 bg-slate-950 rounded-full overflow-hidden">
+                                <div class="h-full transition-all duration-300 ${progressPercent === 100 ? 'bg-emerald-500' : 'bg-amber-500'}" style="width: ${progressPercent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    listContainer.appendChild(button);
+                });
+            }
+
+            // --- STREAMING_CHUNK:Refining step detail presentation... ---
+            // --- Step Detail Render ---
+            function renderStepDetail() {
+                const step = PROCESS_STEPS_DATA[state.selectedStepIdx];
+                
+                document.getElementById('detail-step-code').innerText = `공정코드 ${step.step}`;
+                document.getElementById('detail-step-title').innerText = step.phase;
+                
+                // Draw interactive diagram
+                document.getElementById('diagram-view-port').innerHTML = generateSVG(step.svgType);
+                
+                // 1. Hazard detail
+                document.getElementById('detail-hazard-title').innerText = step.hazard.title;
+                document.getElementById('detail-hazard-mechanics').innerText = step.hazard.mechanics;
+                document.getElementById('detail-hazard-desc').innerText = step.hazard.desc;
+                document.getElementById('detail-hazard-formula').innerText = step.hazard.formula;
+                document.getElementById('detail-hazard-formula-desc').innerText = step.hazard.formulaDesc;
+
+                // 2. Accident Case Detail
+                document.getElementById('detail-accident-title').innerText = step.accident.title;
+                document.getElementById('detail-accident-desc').innerText = step.accident.caseDesc;
+
+                // 3. Checklist Items Rendering
+                const checkedCount = step.checklist.filter(item => state.userCheckedMap[item.id]).length;
+                document.getElementById('detail-checklist-counter').innerText = `${checkedCount} / ${step.checklist.length} 달성`;
+
+                const checklistContainer = document.getElementById('detail-checklist-list');
+                checklistContainer.innerHTML = '';
+
+                step.checklist.forEach(item => {
+                    const isChecked = !!state.userCheckedMap[item.id];
+                    const card = document.createElement('div');
+                    card.className = `p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 ${
+                        isChecked 
+                            ? 'bg-emerald-950/20 border-emerald-500/40 text-slate-300' 
+                            : 'bg-slate-950 border-slate-850 hover:border-slate-800 text-slate-400'
+                    }`;
+                    card.onclick = () => {
+                        state.userCheckedMap[item.id] = !state.userCheckedMap[item.id];
+                        renderAll();
+                    };
+
+                    card.innerHTML = `
+                        <div class="mt-0.5 flex-shrink-0">
+                            <div class="w-4 h-4 rounded flex items-center justify-center border transition-all ${
+                                isChecked ? 'bg-emerald-500 border-emerald-500 text-slate-950' : 'border-slate-700 bg-slate-900'
+                            }">
+                                ${isChecked ? `
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
+                                    </svg>
+                                ` : ''}
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs font-semibold ${isChecked ? 'text-slate-400 line-through decoration-slate-800' : 'text-slate-100'}">
+                                ${item.item}
+                            </p>
+                        </div>
+                    `;
+                    checklistContainer.appendChild(card);
+                });
+            }
+
+            // --- Spec Table Render ---
+            function renderSpecTable() {
+                const tableBody = document.getElementById('spec-table-body');
+                tableBody.innerHTML = '';
+
+                REBAR_DATA.forEach(rebar => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-850/40 transition-colors';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-bold text-white flex items-center gap-3">
+                            <span class="w-2.5 h-2.5 rounded-full ${rebar.color}"></span>
+                            ${rebar.name}
+                        </td>
+                        <td class="px-6 py-4 text-right text-slate-300 font-mono">${rebar.diameter.toFixed(2)} mm</td>
+                        <td class="px-6 py-4 text-right text-slate-300 font-mono">${rebar.area.toFixed(2)} mm²</td>
+                        <td class="px-6 py-4 text-right text-amber-400 font-mono font-bold">${rebar.unitWeight.toFixed(3)} kg/m</td>
+                        <td class="px-6 py-4 text-center text-slate-400">
+                            ${rebar.diameter < 15 ? '슬래브 인장배근, 전단용 늑근/대근' : rebar.diameter < 25 ? '일반 슬래브 주 보강재, 기둥 수평 연성 띠근' : '매트 기초 보강 및 초대형 교량 수직 내력 부재'}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // --- STREAMING_CHUNK:Writing computational engineering systems... ---
+            // --- Calculator Engine ---
+            function calculateMetrics() {
+                const calcRebar = REBAR_DATA[state.calcRebarIndex];
+                const totalWeightKg = calcRebar.unitWeight * state.calcLength * state.calcCount;
+                const totalWeightTon = totalWeightKg / 1000;
+                
+                let multiplier = 40;
+                if (state.rebarGrade === 'SD400') {
+                    if (state.concreteStrength === '24') multiplier = 45;
+                    if (state.concreteStrength === '30') multiplier = 40;
+                    if (state.concreteStrength === '40') multiplier = 35;
+                } else { // SD500
+                    if (state.concreteStrength === '24') multiplier = 55;
+                    if (state.concreteStrength === '30') multiplier = 50;
+                    if (state.concreteStrength === '40') multiplier = 45;
+                }
+
+                if (state.locationType === 'top') {
+                    multiplier = Math.round(multiplier * 1.3);
+                }
+
+                const devLengthMm = Math.round(calcRebar.diameter * multiplier);
+                const spliceLengthMm = Math.round(calcRebar.diameter * multiplier * 1.3); 
+
+                return {
+                    weightKg: totalWeightKg.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
+                    weightTon: totalWeightTon.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 }),
+                    devLength: (devLengthMm / 1000).toFixed(2),
+                    spliceLength: (spliceLengthMm / 1000).toFixed(2)
+                };
+            }
+
+            function updateCalculatorState(key, val) {
+                state[key] = isNaN(val) ? val : Number(val);
+                renderAll();
+            }
+
+            function selectCalculatorRebar(idx) {
+                state.calcRebarIndex = idx;
+                renderAll();
+            }
+
+            function renderCalculator() {
+                // Render Rebar spec buttons
+                const selectorContainer = document.getElementById('calc-rebar-selectors');
+                selectorContainer.innerHTML = '';
+                
+                REBAR_DATA.forEach((rebar, idx) => {
+                    const isActive = state.calcRebarIndex === idx;
+                    const btn = document.createElement('button');
+                    btn.className = `py-1.5 px-2 rounded-lg text-xs font-mono font-bold border transition-all ${
+                        isActive 
+                            ? 'bg-amber-500 border-amber-500 text-slate-950 shadow-md' 
+                            : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
+                    }`;
+                    btn.onclick = () => selectCalculatorRebar(idx);
+                    btn.innerText = rebar.name;
+                    selectorContainer.appendChild(btn);
+                });
+
+                // Set current inputs value safely
+                document.getElementById('calc-input-length').value = state.calcLength;
+                document.getElementById('calc-input-count').value = state.calcCount;
+                document.getElementById('calc-select-strength').value = state.concreteStrength;
+
+                // Render grade buttons
+                const sd400 = document.getElementById('grade-btn-SD400');
+                const sd500 = document.getElementById('grade-btn-SD500');
+                if (state.rebarGrade === 'SD400') {
+                    sd400.className = "flex-1 py-1.5 rounded text-[10px] font-bold text-center transition-all bg-slate-900 text-amber-400";
+                    sd500.className = "flex-1 py-1.5 rounded text-[10px] font-bold text-center transition-all text-slate-500";
+                } else {
+                    sd400.className = "flex-1 py-1.5 rounded text-[10px] font-bold text-center transition-all text-slate-500";
+                    sd500.className = "flex-1 py-1.5 rounded text-[10px] font-bold text-center transition-all bg-slate-900 text-amber-400";
+                }
+
+                // Render location buttons
+                const locOther = document.getElementById('loc-btn-other');
+                const locTop = document.getElementById('loc-btn-top');
+                if (state.locationType === 'other') {
+                    locOther.className = "flex-1 py-1.5 rounded text-[10px] font-semibold text-center transition-all bg-slate-900 text-white font-bold";
+                    locTop.className = "flex-1 py-1.5 rounded text-[10px] font-semibold text-center transition-all text-slate-500";
+                } else {
+                    locOther.className = "flex-1 py-1.5 rounded text-[10px] font-semibold text-center transition-all text-slate-500";
+                    locTop.className = "flex-1 py-1.5 rounded text-[10px] font-semibold text-center transition-all bg-slate-900 text-amber-400 font-bold";
+                }
+
+                // Perform calculations
+                const metrics = calculateMetrics();
+                document.getElementById('out-weight-kg').innerText = `${metrics.weightKg} kg`;
+                document.getElementById('out-weight-ton').innerText = `${metrics.weightTon} Ton`;
+                document.getElementById('out-dev-m').innerText = `${metrics.devLength} m`;
+                document.getElementById('out-dev-mm').innerText = `(${Math.round(parseFloat(metrics.devLength) * 1000)} mm)`;
+                document.getElementById('out-splice-m').innerText = `${metrics.spliceLength} m`;
+                document.getElementById('out-splice-mm').innerText = `(${Math.round(parseFloat(metrics.spliceLength) * 1000)} mm)`;
+            }
+        </script>
+
+        <!-- INITIALIZATION -->
+        <script>
+            window.onload = function() {
+                renderAll();
+            }
+        </script>
+    </body>
+    </html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>콘크리트 타설공사 안전점검 시스템</title>
+    <style>
+        :root {
+            --primary-color: #ff6b00;
+            --primary-dark: #cc5500;
+            --danger-color: #e53935;
+            --warning-color: #ffb300;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            word-break: keep-all;
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #bdc3c7;
+        }
+
+        /* 섹션 공통 스타일 */
+        section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* 1. 주요 위험요인 스타일 */
+        .risk-list {
+            list-style: none;
+        }
+
+        .risk-item {
+            background-color: #fff5ed;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .risk-title {
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        /* 2. 실제 위험/재해 사례 스타일 */
+        .case-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .case-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #fafafa;
+        }
+
+        .case-title {
+            font-weight: bold;
+            color: var(--danger-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 3. 안전 사항 체크리스트 스타일 */
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .step-before { background-color: #e3f2fd; color: #0d47a1; }
+        .step-during { background-color: #fff8e1; color: #ff6f00; }
+        .step-after { background-color: #e8f5e9; color: #1b5e20; }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            border-bottom: 1px solid #edf2f7;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .check-item:hover {
+            background-color: #f7fafc;
+        }
+
+        .check-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-right: 15px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .check-text {
+            font-size: 1rem;
+            color: #4a5568;
+            word-break: keep-all;
+        }
+
+        /* 체크 시 텍스트 스타일 변경 */
+        .check-item input[type="checkbox"]:checked + .check-text {
+            color: #a0aec0;
+            text-decoration: line-through;
+        }
+
+        /* 푸터 */
+        footer {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding: 20px 0;
+        }
+
+        /* 모바일 반응형 대응 */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            header { padding: 20px 10px; }
+            header h1 { font-size: 1.5rem; }
+            section { padding: 15px; }
+            h2 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 상단 헤더 -->
+    <header>
+        <h1>👷‍♂️ 콘크리트 타설공사 안전점검</h1>
+        <p>안전한 작업 환경이 최고의 품질을 만듭니다</p>
+    </header>
+
+    <!-- 1. 주요 위험요인 -->
+    <section>
+        <h2>1. 주요 위험요인</h2>
+        <ul class="risk-list">
+            <li class="risk-item">
+                <div class="risk-title">⚠️ 구조물 붕괴 (가장 치명적)</div>
+                <div class="risk-desc">거푸집 및 동바리(지주)가 콘크리트의 무게와 타설 시의 충격을 견디지 못하고 무너지는 위험이 있습니다.</div>
+            </li>
+            <li class="risk-item">
+                <div class="risk-title">⚠️ 장비 전도 및 타격</div>
+                <div class="risk-desc">콘크리트 펌프카의 지지대(아우트리거) 지반이 침하하여 장비가 넘어지거나, 압송관(엔드 호스)이 요동치며 작업자를 타격할 수 있습니다.</div>
+            </li>
+            <li class="risk-item">
+                <div class="risk-title">⚠️ 작업자 추락</div>
+                <div class="risk-desc">슬래브 가장자리, 개구부, 비계 등 높은 곳에서 타설 및 미장 작업을 하다가 떨어지는 위험이 존재합니다.</div>
+            </li>
+        </ul>
+    </section>
+
+    <!-- 2. 실제 위험/재해 사례 -->
+    <section>
+        <h2>2. 실제 위험 / 재해 사례</h2>
+        <div class="case-container">
+            <div class="case-card">
+                <div class="case-title">🚨 사례 1: 동바리 부실로 인한 슬래브 붕괴</div>
+                <p>모 현장에서 3층 슬래브 타설 중, 하부 동바리의 수평 연결재가 누락되어 상부 하중을 견디지 못하고 붕괴하여 작업자 다수가 매몰되는 사고가 발생했습니다.</p>
+            </div>
+            <div class="case-card">
+                <div class="case-title">🚨 사례 2: 지반 침하로 인한 펌프카 전도</div>
+                <p>성토(흙을 돋운) 지반에서 깔판 없이 펌프카 아우트리거를 설치하고 작업하던 중, 지반이 주저앉으며 붐대가 부러져 인근 작업자를 강타하는 재해가 발생했습니다.</p>
+            </div>
+            <div class="case-card">
+                <div class="case-title">🚨 사례 3: 고압 압송관 파열</div>
+                <p>콘크리트 압송관이 막히자 장비 운전원이 무리하게 압력을 높였고, 관 연결 부위가 파열되면서 비산된 파편에 주변 작업자가 부상을 입었습니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 안전 사항 체크리스트 -->
+    <section>
+        <h2>3. 안전 사항 체크리스트</h2>
+        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">※ 현장 점검 시 항목을 터치하여 체크하세요.</p>
+
+        <!-- 타설 전 -->
+        <div class="step-title step-before">▶ 타설 전 점검사항</div>
+        <div class="checklist">
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">1. 거푸집·동바리는 구조검토를 거친 조립도대로 설치되었는가?</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">2. 동바리의 수평 연결재 및 가새(브레이싱)가 누락 없이 견고하게 고정되었는가?</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">3. 펌프카 설치 지반은 견고하며, 아우트리거 하부에 깔판(철판 등)을 설치했는가?</span>
+            </label>
+        </div>
+
+        <!-- 타설 중 -->
+        <div class="step-title step-during">▶ 타설 중 점검사항</div>
+        <div class="checklist">
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">1. 편심 하중이 발생하지 않도록 한곳에 집중하지 않고 분산 타설하고 있는가?</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">2. 타설 중 거푸집의 변형이나 동바리 이상 유무를 감시할 하부 감시인을 배치했는가?</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">3. 고소 작업자는 안전모와 안전대(안전고리 체결)를 올바르게 착용했는가?</span>
+            </label>
+        </div>
+
+        <!-- 타설 후 -->
+        <div class="step-title step-after">▶ 타설 후 점검사항</div>
+        <div class="checklist">
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">1. 설계 기준 강도가 확보될 때까지 동바리 및 거푸집 조기 해체를 금지하고 있는가?</span>
+            </label>
+            <label class="check-item">
+                <input type="checkbox">
+                <span class="check-text">2. 타설 완료 후 야간 양생 시 갈탄/방열기구 사용에 따른 질식·화재 예방 대책이 있는가?</span>
+            </label>
+        </div>
+    </section>
+
+    <!-- 푸터 영역 -->
+    <footer>
+        <p>© 2026 안전점검 가이드라인. All rights reserved.</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
